@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login / Register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LEFT SECTION (A - 70%) -->
+    <div class="left">
+        <img src="Screenshot (20).png" alt="Image">
+        <p>Welcome to Our Platform</p>
+        <p>Build • Learn • Grow</p>
+        <p>Secure and Simple Access</p>
+    </div>
+
+    <!-- RIGHT SECTION (B - 30%) -->
+    <div class="right">
+
+        <!-- Hidden checkbox for toggle -->
+        <input type="checkbox" id="toggleForm">
+
+        <div class="forms">
+
+            <!-- LOGIN FORM -->
+            <form class="login-form">
+                <h2>Login</h2>
+
+                <input type="email" placeholder="Email" required>
+                <input type="text" placeholder="Username" required>
+                <input type="password" placeholder="Password" required>
+
+                <button type="submit">Login</button>
+
+                <!-- Switch to register -->
+                <label for="toggleForm" class="switch-btn">
+                    Register
+                </label>
+
+                <a href="#fp" class="forgot">Forgot Password?</a>
+            </form>
+
+            <!-- REGISTER FORM -->
+            <form class="register-form">
+                <h2>Register</h2>
+
+                <input type="email" placeholder="Email" required>
+                <input type="text" placeholder="Username" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+
+                <button type="submit">Register</button>
+
+                <!-- Back to login -->
+                <label for="toggleForm" class="switch-btn">
+                    Back to Login
+                </label>
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    height: 100vh;
+}
+
+/* Main container */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT SECTION */
+.left {
+    width: 70%;
+    background: #1e1e2f;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    pointer-events: none;
+    user-select: none;
+}
+
+.left img {
+    width: 250px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    height: 250px;
+}
+
+
+.left p {
+    margin: 5px 0;
+    font-size: 18px;
+}
+
+/* RIGHT SECTION */
+.right {
+    width: 30%;
+    background: #f4f4f4;
+    padding: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hide checkbox */
+#toggleForm {
+    display: none;
+}
+
+h2{
+    text-align: center;
+    margin-bottom: 10px;
+
+}
+
+/* Forms container */
+.forms {
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Base form styles */
+.login-form,
+.register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.register-form {
+    display: none;
+}
+
+/* Toggle logic */
+#toggleForm:checked ~ .forms .login-form {
+    display: none;
+}
+
+#toggleForm:checked ~ .forms .register-form {
+    display: flex;
+}
+
+/* Inputs */
+.forms input {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* Buttons */
+.forms button {
+    padding: 10px;
+    margin-top: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Switch text button */
+.switch-btn {
+    margin-top: 12px;
+    text-align: center;
+    color: #0066cc;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Forgot password */
+.forgot {
+    margin-top: 15px;
+    font-size: 13px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+}
