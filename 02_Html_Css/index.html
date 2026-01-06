@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Register</title>
+    <link rel="stylesheet" href="style.css">   
+</head>
+<body>
+
+<div class="container"> 
+    <div class="left">
+        <img src="download.png" alt="Platform Image">
+        <p>Welcome to Our Platform</p>
+        <p>Build • Learn • Grow</p>
+        <p>Secure and Simple Access</p>
+    </div>
+
+    <div class="right">
+        <div class="tabs">
+            <a href="#login" class="tab-link">Login</a>
+            <a href="#register" class="tab-link">Register</a>
+        </div>
+
+        <div class="forms">
+            <form class="login-form">
+                <h2>Login</h2>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+                <a href="#fp" class="forgot">Forgot Password?</a>
+            </form>
+
+            <form class="register-form">
+                <h2>Register</h2>
+                <input type="email" placeholder="Email" required>
+                <input type="text" placeholder="Username" required>
+                <input type="password" placeholder="Password" required>
+                <input type="password" placeholder="Confirm Password" required>
+                <button type="submit">Register</button>
+            </form>
+
+            <form class="forgot-form">
+                <h2>Forgot Password</h2>
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Reset Password</button>
+                <a href="#login" class="back-link">Back to Login</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<span id="login"></span>
+<span id="register"></span>
+<span id="fp"></span>
+
+</body>
+</html>
