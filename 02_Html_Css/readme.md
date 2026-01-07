@@ -12,7 +12,8 @@
 
 - ScreenShots of website     
     - for Desktop view
-        ![alt text](<Screenshot 2026-01-07 142114-1.png>) 
+  
+        ![alt text](<Screenshot 2026-01-07 142114.png>) 
     - for Mobile view 
-     
-        ![alt text](<Screenshot 2026-01-07 142133-1.png>) 
+  
+        ![alt text](<Screenshot 2026-01-07 142133.png>) 
