@@ -1,6 +1,6 @@
-let sum = 0;
 
-const promise1 = new Promise((resolve, reject) => {
+
+const promise1 =(sum) =>  new Promise((resolve, reject) => {
     if (sum > 35) {
         resolve('successful');
     } else {
@@ -13,7 +13,7 @@ function main1() {
 
 
 
-    let arr = [1, 2, 3];
+    let arr = [1, 2, 300];
     let sym1 = Symbol();
     let sym_array = {
         [sym1]: arr
@@ -34,7 +34,7 @@ function main3(element, arr, sym1) {
     for (let i = 0; i < arr[sym1].length; i++) {
         arr2.push(arr[sym1][i]);
     }
-
+    let sum = 0;
     for (let i = 0; i < arr2.length; i++) {
         sum += arr2[i];
     }
@@ -44,12 +44,15 @@ function main3(element, arr, sym1) {
         console.log(arr2[i]);
     }
     
-    promise1.then((message) => {
-        console.log("The sum is " + sum + ", the operation was " + message);
-    }).catch((message) => {
+    promise1(sum).then((message) => {
+     console.log("The sum is " + sum + ", the operation was " + message);
+ }).catch((message) => {
         console.log("The sum is " + sum + ", the operation was " + message);
     });
 
+
+ 
+  
 }
 
 main1()
