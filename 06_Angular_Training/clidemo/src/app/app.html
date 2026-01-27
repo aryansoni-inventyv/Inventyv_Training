@@ -1,0 +1,56 @@
+<div class="terminal-container">
+
+    <!-- Header -->
+    <div class="terminal-header">
+        <span>Angular CLI Simulator</span>
+        <button (click)="clearTerminal()">Clear</button>
+    </div>
+    
+    <!-- Terminal -->
+    <div class="terminal-body" #terminal (click)="focusInput()">
+
+        <!-- Welcome -->
+        <div *ngIf="history.length === 0" class="welcome">
+            <p>Welcome to Angular CLI Simulator</p>
+            <p>Available commands:</p>
+            <p>• ng generate demo-app --routing --styles=scss</p>
+            <p>• ng build</p>
+        </div>
+
+        <!-- History -->
+        <div *ngFor="let item of history">
+
+            <!-- User input -->
+            <div class="command-line">
+                <span class="prompt">❯$</span>
+                <span>{{ item.input }}</span>
+            </div>
+
+            <!-- Response (line by line) -->
+            <div *ngFor="let line of item.responseLines" class="response"
+                [ngClass]="item.success ? 'success' : 'error'">
+                {{ line }}
+            </div>
+
+            <!-- Status -->
+            <div class="status">
+                {{ item.success ? '✓ Success' : '✗ Error' }}
+            </div>
+
+            <!-- Explanation -->
+            <div class="explanation">
+                {{ item.explanation }}
+            </div>
+
+        </div>
+
+        <!-- Input -->
+        <form (ngSubmit)="executeCommand()" class="input-line">
+            <span class="prompt">$</span>
+            <input #commandInput type="text" [(ngModel)]="input" name="command" class="terminal-input"
+                autocomplete="off" />
+        </form>
+
+
+    </div>
+</div>

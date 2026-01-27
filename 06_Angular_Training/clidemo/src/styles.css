@@ -1,0 +1,92 @@
+/* Full terminal background */
+.terminal-container {
+  background: #000;
+  min-height: 100vh;
+  font-family: 'Courier New', monospace;
+  color: #00ff00;
+}
+
+/* Header */
+.terminal-header {
+  background: #111;
+  color: #0f0;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #222;
+}
+
+/* Terminal body */
+.terminal-body {
+  padding: 15px;
+  height: 80vh;
+  overflow-y: auto;
+  cursor: text;
+}
+
+/* Welcome text */
+.welcome {
+  color: #00ff00;
+  margin-bottom: 15px;
+}
+
+/* Command line */
+.command-line {
+  display: flex;
+  gap: 8px;
+  color: #ffd700; /* yellow */
+}
+
+/* Prompt */
+.prompt {
+  color: #00ff00;
+}
+
+/* Input */
+.terminal-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffd700; /* yellow input */
+  font-family: inherit;
+  width: 100%;
+}
+
+/* Output */
+.response {
+  margin-left: 20px;
+  white-space: pre-wrap;
+  color: #00ff00; /* green output */
+}
+
+/* Error output */
+.response.error {
+  color: #ff5555;
+}
+
+/* Status */
+.status {
+  margin-left: 20px;
+  color: #00ff00;
+}
+
+/* Explanation */
+.explanation {
+  margin-left: 20px;
+  color: #00ffff; /* cyan */
+  font-size: 13px;
+}
+
+/* Remove button default styling */
+button {
+  background: transparent;
+  color: #00ff00;
+  border: 1px solid #00ff00;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #00ff00;
+  color: #000;
+}
