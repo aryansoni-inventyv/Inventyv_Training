@@ -1,0 +1,26 @@
+<div>
+    <H1 >Cart</H1>
+    <div class="empty" *ngIf ="cartItems.length === 0">
+        cart is empty
+    </div>
+
+
+    <div class="productlist" *ngIf ="cartItems.length > 0">
+
+        <div class="innerlist" *ngFor="let item of cartItems">
+            <div class="pname" >{{ item.product.name}}</div>
+            <div class="pprice">{{ item.product.price}}</div>
+            <div class="pquantity">{{ item.quantity}}</div>
+
+            <button class="rmbtn" (click)="removeProduct(item.product)"> Remove</button>
+            <button class="addbtn"  (click)="addproductquantity(item.product)"> +</button>
+            <button class="subbtn" (click)="subproductquantity(item.product)"> -</button>
+        </div>
+    </div>
+
+
+    
+</div>
+
+<div>TOTAL AMOUNT : {{this.totalamount}}</div>
+<div>TOTAL ITEM : {{this.totalitem}}</div>

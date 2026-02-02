@@ -1,0 +1,16 @@
+<p><app-cart-header></app-cart-header></p>
+<h1>Product List</h1>
+<ul>
+    
+        <li *ngFor="let product of productData">
+            <div class="product-boxes">{{product.name}} - ${{product.price}}
+
+                <button (click)="addToCart(product)">Add to Cart</button>
+            </div>
+        </li>
+
+
+</ul>
+
+
+    

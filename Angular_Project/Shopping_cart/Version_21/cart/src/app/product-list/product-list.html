@@ -1,0 +1,23 @@
+<p><app-cart-header></app-cart-header></p>
+
+<h1 class="page-title">Product List</h1>
+
+<ul class="product-list">
+  @for (product of products(); track product.id) {
+    <li class="product-item">
+      <div class="product-box">
+        <div class="product-info">
+          <span class="product-name">{{ product.name }}</span>
+          <span class="product-price">${{ product.price }}</span>
+        </div>
+
+        <button
+          (click)="addToCart(product)"
+          class="add-to-cart-btn"
+        >
+          Add to Cart
+        </button>
+      </div>
+    </li>
+  }
+</ul>

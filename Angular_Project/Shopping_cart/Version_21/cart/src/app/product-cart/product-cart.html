@@ -1,0 +1,56 @@
+
+
+<h1>
+  Cart
+</h1>
+<div class="cart-container">
+
+  <!-- Empty Cart -->
+  @if (cartItems().length === 0) {
+    <div class="empty-cart card">
+      <p class="empty-text">Your cart is empty 🛒</p>
+    </div>
+  }
+
+  <!-- Cart Items -->
+  @if (cartItems().length > 0) {
+    <div class="cart-items">
+      @for (item of cartItems(); track item.product.id) {
+        <div class="cart-item card">
+
+          <div class="item-details">
+            <h3 class="item-name">{{ item.product.name }}</h3>
+            <p class="item-price">${{ item.product.price }}</p>
+          </div>
+
+          <div class="item-quantity">
+            <button (click)="decrementQuantity(item.product.id)" class="qty-btn">−</button>
+            <span class="quantity">{{ item.quantity }}</span>
+            <button (click)="incrementQuantity(item.product.id)" class="qty-btn">+</button>
+          </div>
+
+          <div class="item-total">
+            <p class="subtotal">${{ item.product.price * item.quantity }}</p>
+          </div>
+
+          <button (click)="removeItem(item.product.id)" class="remove-btn">Remove</button>
+        </div>
+      }
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="cart-summary card">
+      <div class="summary-row">
+        <span>Total Items</span>
+        <span class="summary-value">{{ totalItemsCount() }}</span>
+      </div>
+
+      <div class="summary-row total">
+        <span>Total Price</span>
+        <span class="summary-value">${{ totalPrice() }}</span>
+      </div>
+
+      <button (click)="clearCart()" class="clear-btn">Clear Cart</button>
+    </div>
+  }
+</div>

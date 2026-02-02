@@ -1,0 +1,17 @@
+<p>user-card works!</p>
+
+
+<mat-card [class.active-border] = "user.isActive">
+    <p>{{user.name}}</p>
+    <p>Age : {{user.age}}</p>
+
+    <img [src]="user.avatarUrl" alt="User Avatar" width="100">
+    
+    <mat-form-field>
+        <input [(ngModel)]="user.name" #nameInput>
+    </mat-form-field>
+
+    <button mat-raised-button (click)="toggleStatus()" [disabled]="!user.name">
+        Status : {{user.isActive ? 'Active' : 'Inactive'}}
+    </button>
+</mat-card>
