@@ -1,0 +1,12 @@
+<button (click) = "login()" >Login</button>
+<p *ngIf="loading" > Loading...</p>
+
+<!-- <p *ngIf="response">
+  {{response.username}}
+</p>
+<p *ngIf="response">
+  {{response.gender}}
+</p> -->
+<p *ngIf="response">
+  {{response | json}}
+</p>

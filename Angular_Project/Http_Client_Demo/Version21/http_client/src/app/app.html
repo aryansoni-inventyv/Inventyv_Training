@@ -1,0 +1,9 @@
+<button (click)="login()">Login</button>
+
+<button (click)="fetchUser()" [disabled]="!loggedIn">
+  Fetch User Data
+</button>
+
+<pre *ngIf="user">
+{{ user | json }}
+</pre>
