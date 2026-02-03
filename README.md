@@ -4,6 +4,7 @@
 
     - Logic Building using Flowcharts 
     - using of Figjam for making the Flowchart  
+  
 2. *02_Html_Css*
    - build a small project using CSS and HTML
    - learn how to make the responsive output
@@ -13,5 +14,5 @@
   
 4. *04_javascript_task*
     - code the pattern using javascript
-    - learn promise , symbol
+    - learn promise , symbol , unshift , pass the array to next function 
     

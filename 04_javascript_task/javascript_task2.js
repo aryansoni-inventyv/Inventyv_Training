@@ -13,7 +13,7 @@ function printPattern(size) {
             process.stdout.write(" ");
         }
         console.log();
-    }
+    }    
 }
 printPattern(6);
 

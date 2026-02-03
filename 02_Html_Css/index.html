@@ -1,58 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login / Register</title>
-    <link rel="stylesheet" href="style.css">   
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="container"> 
-    <div class="left">
-        <img src="download.png" alt="Platform Image">
-        <p>Welcome to Our Platform</p>
-        <p>Build • Learn • Grow</p>
-        <p>Secure and Simple Access</p>
-    </div>
-
-    <div class="right">
-        <div class="tabs">
-            <a href="#login" class="tab-link">Login</a>
-            <a href="#register" class="tab-link">Register</a>
+    <div class="container">
+        <div class="left">
+            <img src="download.png" alt="Platform Image">
+            <p>Welcome to Our Platform</p>
+            <p>Build • Learn • Grow</p>
+            <p>Secure and Simple Access</p>
         </div>
 
-        <div class="forms">
-            <form class="login-form">
-                <h2>Login</h2>
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-                <a href="#fp" class="forgot">Forgot Password?</a>
-            </form>
+        <div class="right">
+            <div class="tabs">
+                <a href="#login" class="tab-link">Login</a>
+                <a href="#register" class="tab-link">Register</a>
+            </div>
 
-            <form class="register-form">
-                <h2>Register</h2>
-                <input type="email" placeholder="Email" required>
-                <input type="text" placeholder="Username" required>
-                <input type="password" placeholder="Password" required>
-                <input type="password" placeholder="Confirm Password" required>
-                <button type="submit">Register</button>
-            </form>
+            <div class="forms">
+                <form class="login-form">
+                    <h2>Login</h2>
+                    <input type="email" placeholder="Email" required>
+                    <input type="password" placeholder="Password" required>
+                    <div class = "abcd">    <button class="Btn">
 
-            <form class="forgot-form">
-                <h2>Forgot Password</h2>
-                <input type="email" placeholder="Enter your email" required>
-                <button type="submit">Reset Password</button>
-                <a href="#login" class="back-link">Back to Login</a>
-            </form>
+                            <div class="sign"><svg viewBox="0 0 512 512">
+                                    <path
+                                        d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z">
+                                    </path>
+                                </svg></div>
+
+                            <div class="text">Login</div>
+                        </button>
+                    </div>
+                    <a href="#fp" class="forgot">Forgot Password?</a>
+                </form>
+
+                <form class="register-form">
+                    <h2>Register</h2>
+                    <input type="email" placeholder="Email" required>
+                    <input type="text" placeholder="Username" required>
+                    <input type="password" placeholder="Password" required>
+                    <input type="password" placeholder="Confirm Password" required>
+                    <button class="Btn">
+                            <div class="sign"><svg viewBox="0 0 512 512">
+                                    <path
+                                        d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z">
+                                    </path>
+                                </svg></div>
+
+                            <div class="text">Register</div>
+                        </button>
+                </form>
+
+                <form class="forgot-form">
+                    <h2>Forgot Password</h2>
+                    <input type="email" placeholder="Enter your email" required>
+                    <button class="Btn">
+                            <div class="sign"><svg viewBox="0 0 512 512">
+                                    <path
+                                        d="M217.9 105.9L340.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L217.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1L32 320c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM352 416l64 0c17.7 0 32-14.3 32-32l0-256c0-17.7-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c53 0 96 43 96 96l0 256c0 53-43 96-96 96l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32z">
+                                    </path>
+                                </svg></div>
+
+                            <div class="text">Reset Password</div>
+                        </button>
+                    <a href="#login" class="back-link">Back to Login</a>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<span id="login"></span>
-<span id="register"></span>
-<span id="fp"></span>
+    <span id="login"></span>
+    <span id="register"></span>
+    <span id="fp"></span>
 
 </body>
+
 </html>
