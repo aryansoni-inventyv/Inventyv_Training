@@ -1,9 +1,270 @@
-<button (click)="login()">Login</button>
+<div class="dark-container">
+  
+  <!-- Buttons -->
+  <div class="button-group">
+    <button class="neon-btn login-btn" (click)="login()">
+      <span class="btn-glow"></span>
+      <span class="btn-text">Login</span>
+    </button>
 
-<button (click)="fetchUser()" [disabled]="!loggedIn">
-  Fetch User Data
-</button>
+    <button 
+      class="neon-btn fetch-btn" 
+      (click)="fetchUser()" 
+      [disabled]="!loggedIn"
+      [class.disabled]="!loggedIn">
+      <span class="btn-glow"></span>
+      <span class="btn-text">Fetch User Data</span>
+    </button>
+  </div>
 
-<pre *ngIf="user">
-{{ user | json }}
-</pre>
+  <!-- User Profile Display -->
+  <div class="user-profile" *ngIf="user">
+    
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-image-wrapper">
+        <img [src]="user.image" alt="Profile" class="profile-image">
+        <div class="image-glow"></div>
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name">
+          {{ user.firstName }} {{ user.lastName }}
+          <span class="maiden-name" *ngIf="user.maidenName">({{ user.maidenName }})</span>
+        </h1>
+        <p class="profile-username">@{{ user.username }}</p>
+        <div class="profile-badges">
+          <span class="role-badge">{{ user.role }}</span>
+          <span class="info-badge">{{ user.gender }}</span>
+          <span class="info-badge">{{ user.age }} years</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Personal Information Section -->
+    <div class="section">
+      <h2 class="section-title">
+        <span class="title-icon">👤</span>
+        Personal Information
+      </h2>
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="card-icon">📧</div>
+          <div class="card-label">Email</div>
+          <div class="card-value">{{ user.email }}</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">📱</div>
+          <div class="card-label">Phone</div>
+          <div class="card-value">{{ user.phone }}</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">🎂</div>
+          <div class="card-label">Birth Date</div>
+          <div class="card-value">{{ user.birthDate }}</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">🩸</div>
+          <div class="card-label">Blood Group</div>
+          <div class="card-value">{{ user.bloodGroup }}</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">📏</div>
+          <div class="card-label">Height</div>
+          <div class="card-value">{{ user.height }} cm</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">⚖️</div>
+          <div class="card-label">Weight</div>
+          <div class="card-value">{{ user.weight }} kg</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">👁️</div>
+          <div class="card-label">Eye Color</div>
+          <div class="card-value">{{ user.eyeColor }}</div>
+        </div>
+        <div class="data-card" *ngIf="user.hair">
+          <div class="card-icon">💇</div>
+          <div class="card-label">Hair</div>
+          <div class="card-value">{{ user.hair.color }} - {{ user.hair.type }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Address Section -->
+    <div class="section" *ngIf="user.address">
+      <h2 class="section-title">
+        <span class="title-icon">🏠</span>
+        Address Information
+      </h2>
+      <div class="nested-card">
+        <div class="nested-grid">
+          <div class="nested-item">
+            <span class="nested-label">Street:</span>
+            <span class="nested-value">{{ user.address.address }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">City:</span>
+            <span class="nested-value">{{ user.address.city }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">State:</span>
+            <span class="nested-value">{{ user.address.state }} ({{ user.address.stateCode }})</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Postal Code:</span>
+            <span class="nested-value">{{ user.address.postalCode }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Country:</span>
+            <span class="nested-value">{{ user.address.country }}</span>
+          </div>
+          <div class="nested-item" *ngIf="user.address.coordinates">
+            <span class="nested-label">Coordinates:</span>
+            <span class="nested-value">{{ user.address.coordinates.lat }}, {{ user.address.coordinates.lng }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Information -->
+    <div class="section" *ngIf="user.company">
+      <h2 class="section-title">
+        <span class="title-icon">🏢</span>
+        Company Information
+      </h2>
+      <div class="nested-card">
+        <div class="nested-grid">
+          <div class="nested-item">
+            <span class="nested-label">Company:</span>
+            <span class="nested-value">{{ user.company.name }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Title:</span>
+            <span class="nested-value">{{ user.company.title }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Department:</span>
+            <span class="nested-value">{{ user.company.department }}</span>
+          </div>
+          <div class="nested-item full-width" *ngIf="user.company.address">
+            <span class="nested-label">Office Address:</span>
+            <span class="nested-value">
+              {{ user.company.address.address }}, {{ user.company.address.city }}, 
+              {{ user.company.address.state }} {{ user.company.address.postalCode }}, 
+              {{ user.company.address.country }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="section">
+      <h2 class="section-title">
+        <span class="title-icon">🎓</span>
+        Education
+      </h2>
+      <div class="data-grid">
+        <div class="data-card highlight">
+          <div class="card-icon">🏫</div>
+          <div class="card-label">University</div>
+          <div class="card-value">{{ user.university }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bank Information -->
+    <div class="section" *ngIf="user.bank">
+      <h2 class="section-title">
+        <span class="title-icon">💳</span>
+        Banking Information
+      </h2>
+      <div class="nested-card secure">
+        <div class="nested-grid">
+          <div class="nested-item">
+            <span class="nested-label">Card Type:</span>
+            <span class="nested-value">{{ user.bank.cardType }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Card Number:</span>
+            <span class="nested-value secure-data">**** **** **** {{ user.bank.cardNumber.slice(-4) }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Expires:</span>
+            <span class="nested-value">{{ user.bank.cardExpire }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Currency:</span>
+            <span class="nested-value">{{ user.bank.currency }}</span>
+          </div>
+          <div class="nested-item full-width">
+            <span class="nested-label">IBAN:</span>
+            <span class="nested-value secure-data">{{ user.bank.iban }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crypto Information -->
+    <div class="section" *ngIf="user.crypto">
+      <h2 class="section-title">
+        <span class="title-icon">₿</span>
+        Cryptocurrency
+      </h2>
+      <div class="nested-card crypto">
+        <div class="nested-grid">
+          <div class="nested-item">
+            <span class="nested-label">Coin:</span>
+            <span class="nested-value">{{ user.crypto.coin }}</span>
+          </div>
+          <div class="nested-item">
+            <span class="nested-label">Network:</span>
+            <span class="nested-value">{{ user.crypto.network }}</span>
+          </div>
+          <div class="nested-item full-width">
+            <span class="nested-label">Wallet Address:</span>
+            <span class="nested-value crypto-wallet">{{ user.crypto.wallet }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Information -->
+    <div class="section">
+      <h2 class="section-title">
+        <span class="title-icon">🔧</span>
+        Technical Details
+      </h2>
+      <div class="data-grid">
+        <div class="data-card">
+          <div class="card-icon">🌐</div>
+          <div class="card-label">IP Address</div>
+          <div class="card-value">{{ user.ip }}</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">📡</div>
+          <div class="card-label">MAC Address</div>
+          <div class="card-value">{{ user.macAddress }}</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">🆔</div>
+          <div class="card-label">EIN</div>
+          <div class="card-value">{{ user.ein }}</div>
+        </div>
+        <div class="data-card">
+          <div class="card-icon">🔐</div>
+          <div class="card-label">SSN</div>
+          <div class="card-value secure-data">***-**-{{ user.ssn.slice(-3) }}</div>
+        </div>
+      </div>
+      <div class="nested-card" style="margin-top: 20px;">
+        <div class="nested-item full-width">
+          <span class="nested-label">User Agent:</span>
+          <span class="nested-value small-text">{{ user.userAgent }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,256 @@
+/* =============== GLOBAL =============== */
+
+.home-container {
+  font-family: 'Inter', sans-serif;
+  background: #f5f7fb;
+  color: #1e293b;
+}
+
+/* =============== HERO =============== */
+
+.hero {
+  height: 85vh;
+  background: linear-gradient(rgba(15,23,42,0.75), rgba(15,23,42,0.75)),
+              url('https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=2210&quality=70');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.hero-content {
+  max-width: 750px;
+  color: white;
+}
+
+.hero h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #2563eb;
+}
+
+.hero p {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  color: #6e96ee;
+}
+
+/* =============== SEARCH CARD =============== */
+
+.search-section {
+  margin-top: -110px;
+  padding: 0 20px 80px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-card {
+  background: white;
+  width: 100%;
+  max-width: 1000px;
+  border-radius: 24px;
+  padding: 45px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.15);
+}
+
+/* Tabs */
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.tab {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 50px;
+  background: #e2e8f0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: white;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.3);
+}
+
+.tab:hover:not(.active) {
+  background: #cbd5e1;
+}
+
+/* Panel */
+
+.panel-content {
+  text-align: center;
+  animation: fadeUp 0.4s ease;
+}
+
+.panel-content h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.panel-content p {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+/* Button */
+
+/* From Uiverse.io by Gaurav-WebDev */ 
+.primary-btn {
+  height: 50px;
+  width: 150px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s ease-in-out;
+}
+
+.primary-btn:hover {
+  box-shadow: .5px .5px 150px #252525;
+}
+
+.type1::after {
+  content: "Thanks";
+  height: 50px;
+  width: 150px;
+  background-color: #008080;
+  color: #fff;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  transform: translateY(50px);
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease-in-out;
+}
+
+.type1::before {
+  content: "Search";
+  height: 50px;
+  width: 150px;
+  background-color: #fff;
+  color: #008080;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  transform: translateY(0px) scale(1.2);
+  font-size: 1.2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease-in-out;
+}
+
+.type1:hover::after {
+  transform: translateY(0) scale(1.2);
+}
+
+.type1:hover::before {
+  transform: translateY(-50px) scale(0) rotate(120deg);
+}
+
+/* =============== STATS =============== */
+
+.stats {
+  padding: 100px 20px;
+  background: white;
+}
+
+.stats-grid {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 40px;
+  text-align: center;
+}
+
+.stat h3 {
+  font-size: 2.5rem;
+  color: #2563eb;
+}
+
+.stat p {
+  margin-top: 10px;
+  font-weight: 500;
+  color: #475569;
+}
+
+/* =============== FEATURES =============== */
+
+.features {
+  padding: 100px 20px;
+  background: #f1f5f9;
+  text-align: center;
+}
+
+.features h2 {
+  font-size: 2.3rem;
+  margin-bottom: 50px;
+}
+
+.features-grid {
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+}
+
+.feature-card {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+}
+
+/* =============== ANIMATION =============== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =============== RESPONSIVE =============== */
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .search-card {
+    padding: 25px;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+}

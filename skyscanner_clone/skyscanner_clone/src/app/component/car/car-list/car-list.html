@@ -1,0 +1,238 @@
+<!-- src/app/component/car/car-list/car-list.component.html -->
+<div class="car-list-container">
+  <!-- Header -->
+  <div class="results-header">
+    <button class="back-btn" (click)="backToSearch()">← Back to Search</button>
+    <h1>Available Cars</h1>
+    <p class="search-summary">
+      {{ searchCriteria.pickupLocation }}
+      @if (searchCriteria.pickupLocation !== searchCriteria.dropoffLocation) {
+        → {{ searchCriteria.dropoffLocation }}
+      } • 
+      {{ searchCriteria.pickupDate }} {{ searchCriteria.pickupTime }} → 
+      {{ searchCriteria.dropoffDate }} {{ searchCriteria.dropoffTime }} • 
+      {{ calculateDays() }} day(s)
+    </p>
+  </div>
+
+  <div class="results-layout">
+    <!-- Filters Sidebar -->
+    <aside class="filters-sidebar">
+      <h3>Filters</h3>
+
+      <!-- Price Filter -->
+      <div class="filter-group">
+        <label>Max Price per Day: {{ formatPrice(maxPrice) }}</label>
+        <input 
+          type="range" 
+          [(ngModel)]="maxPrice"
+          min="0" 
+          max="10000" 
+          step="500"
+          (input)="onFilterChange()"
+          class="price-slider">
+      </div>
+
+      <!-- Type Filter -->
+      <div class="filter-group">
+        <label>Car Type</label>
+        <select [(ngModel)]="selectedType" (change)="onFilterChange()" class="filter-select">
+          <option value="all">All Types</option>
+          <option value="economy">Economy</option>
+          <option value="compact">Compact</option>
+          <option value="sedan">Sedan</option>
+          <option value="suv">SUV</option>
+          <option value="van">Van</option>
+          <option value="luxury">Luxury</option>
+        </select>
+      </div>
+
+      <!-- Transmission Filter -->
+      <div class="filter-group">
+        <label>Transmission</label>
+        <select [(ngModel)]="selectedTransmission" (change)="onFilterChange()" class="filter-select">
+          <option value="all">Any</option>
+          <option value="automatic">Automatic</option>
+          <option value="manual">Manual</option>
+        </select>
+      </div>
+
+      <!-- Fuel Type Filter -->
+      <div class="filter-group">
+        <label>Fuel Type</label>
+        <select [(ngModel)]="selectedFuelType" (change)="onFilterChange()" class="filter-select">
+          <option value="all">Any</option>
+          <option value="petrol">Petrol</option>
+          <option value="diesel">Diesel</option>
+          <option value="electric">Electric</option>
+          <option value="hybrid">Hybrid</option>
+        </select>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select [(ngModel)]="sortBy" (change)="onFilterChange()" class="filter-select">
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Highest Rated</option>
+          <option value="seats">Most Seats</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <main class="results-main">
+      <!-- Loading State -->
+      @if (loading) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Searching for available cars...</p>
+        </div>
+      }
+
+      <!-- No Results -->
+      @if (!loading && filteredCars.length === 0) {
+        <div class="no-results">
+          <h2>No cars found</h2>
+          <p>Try adjusting your filters or search criteria</p>
+          <button class="btn-primary" (click)="backToSearch()">New Search</button>
+        </div>
+      }
+
+      <!-- Results Count -->
+      @if (!loading && filteredCars.length > 0) {
+        <div class="results-count">
+          Found {{ filteredCars.length }} car(s)
+        </div>
+      }
+
+      <!-- Car Cards -->
+      @if (!loading) {
+        <div class="cars-grid">
+          @for (car of filteredCars; track car.id) {
+            <div class="car-card" (click)="selectCar(car)">
+              <!-- Favorite Button -->
+              <button 
+                class="fav-btn"
+                [class.active]="isFavorite(car)"
+                (click)="toggleFavorite(car, $event)">
+                {{ isFavorite(car) ? '❤️' : '🤍' }}
+              </button>
+
+              <!-- Car Image Placeholder -->
+              <div class="car-image">
+                <div class="car-type-badge">{{ car.type | titlecase }}</div>
+              </div>
+
+              <!-- Car Info -->
+              <div class="car-info">
+                <!-- Header -->
+                <div class="car-header">
+                  <div>
+                    <h3>{{ car.brand }} {{ car.model }}</h3>
+                    <div class="car-year">{{ car.year }} Model</div>
+                  </div>
+                  <div class="rating">
+                    @for (star of getStarArray(car.rating); track $index) {
+                      <span class="star">⭐</span>
+                    }
+                    @if (hasHalfStar(car.rating)) {
+                      <span class="star half">⭐</span>
+                    }
+                    <span class="rating-value">{{ car.rating }}</span>
+                  </div>
+                </div>
+
+                <!-- Specifications -->
+                <div class="specifications">
+                  <div class="spec-item">
+                    <span class="icon">👥</span>
+                    <span>{{ car.seats }} Seats</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="icon">🚪</span>
+                    <span>{{ car.doors }} Doors</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="icon">🧳</span>
+                    <span>{{ car.luggage }} Bags</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="icon">{{ getTransmissionIcon(car.transmission) }}</span>
+                    <span>{{ car.transmission | titlecase }}</span>
+                  </div>
+                  <div class="spec-item">
+                    <span class="icon">{{ getFuelTypeIcon(car.fuelType) }}</span>
+                    <span>{{ car.fuelType | titlecase }}</span>
+                  </div>
+                </div>
+
+                <!-- Features -->
+                <div class="features">
+                  @for (feature of car.features; track feature) {
+                    <span class="feature-badge">{{ feature }}</span>
+                  }
+                </div>
+
+                <!-- Footer -->
+                <div class="car-footer">
+                  <div class="rental-company">
+                    <span class="label">Rental Company:</span>
+                    <span class="company">{{ car.rentalCompany }}</span>
+                  </div>
+                  
+                  <div class="pricing">
+                    <div class="price-per-day">
+                      <span class="amount">{{ formatPrice(car.pricePerDay) }}</span>
+                      <span class="per-text">per day</span>
+                    </div>
+                    <div class="total-price">
+                      <span class="label">Total:</span>
+                      <span class="total">{{ formatPrice(car.pricePerDay * calculateDays()) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </main>
+  </div>
+</div>
+
+<!--
+CAR LIST TEMPLATE FEATURES:
+
+1. Visual Layout:
+   - Card-based design with car image placeholder
+   - Type badge overlay on image
+   - Compact specification grid
+   
+2. Specifications Display:
+   - Seats, doors, luggage capacity
+   - Transmission type with icon
+   - Fuel type with icon
+   - All in a clean grid layout
+
+3. Features Section:
+   - Shows car features as badges
+   - GPS, AC, Bluetooth, etc.
+   
+4. Pricing Display:
+   - Price per day (main price)
+   - Total cost for rental period
+   - Rental company name
+
+5. Rating:
+   - Star rating display
+   - Numeric rating value
+   - Half-star support
+
+6. Filters:
+   - Car type dropdown
+   - Transmission (auto/manual)
+   - Fuel type (petrol/diesel/electric/hybrid)
+   - Price slider
+-->

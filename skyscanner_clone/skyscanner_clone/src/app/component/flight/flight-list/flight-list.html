@@ -1,0 +1,161 @@
+
+<div class="flight-list-container">
+  <!-- Header -->
+  <div class="results-header">
+    <button class="back-btn" (click)="backToSearch()">← Back to Search</button>
+    <h1>Flight Results</h1>
+    <p class="search-summary">
+      {{ searchCriteria.from }} → {{ searchCriteria.to }} • 
+      {{ searchCriteria.departureDate }} • 
+      {{ searchCriteria.passengers }} passenger(s)
+    </p>
+  </div>
+
+  <div class="results-layout">
+    <!-- Filters Sidebar -->
+    <aside class="filters-sidebar">
+      <h3>Filters</h3>
+
+      <!-- Price Filter -->
+      <div class="filter-group">
+        <label>Max Price: {{ formatPrice(maxPrice) }}</label>
+        <input 
+          type="range" 
+          [(ngModel)]="maxPrice"
+          min="0" 
+          max="10000" 
+          step="500"
+          (input)="onFilterChange()"
+          class="price-slider">
+      </div>
+
+      <!-- Class Filter -->
+      <div class="filter-group">
+        <label>Class</label>
+        <select [(ngModel)]="selectedClass" (change)="onFilterChange()" class="filter-select">
+          <option value="all">All Classes</option>
+          <option value="economy">Economy</option>
+          <option value="business">Business</option>
+          <option value="first">First Class</option>
+        </select>
+      </div>
+
+      <!-- Stops Filter -->
+      <div class="filter-group">
+        <label>Stops</label>
+        <select [(ngModel)]="selectedStops" (change)="onFilterChange()" class="filter-select">
+          <option value="all">All Flights</option>
+          <option value="non-stop">Non-stop only</option>
+          <option value="one-stop">Up to 1 stop</option>
+        </select>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select [(ngModel)]="sortBy" (change)="onFilterChange()" class="filter-select">
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="duration">Duration</option>
+          <option value="departure">Departure Time</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <main class="results-main">
+      <!-- Loading State -->
+      @if (loading) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Searching for flights...</p>
+        </div>
+      }
+
+      <!-- No Results -->
+      @if (!loading && filteredFlights.length === 0) {
+        <div class="no-results">
+          <h2>No flights found</h2>
+          <p>Try adjusting your filters or search criteria</p>
+          <button class="btn-primary" (click)="backToSearch()">New Search</button>
+        </div>
+      }
+
+      <!-- Results Count -->
+      @if (!loading && filteredFlights.length > 0) {
+        <div class="results-count">
+          Found {{ filteredFlights.length }} flight(s)
+        </div>
+      }
+
+      <!-- Flight Cards -->
+      @if (!loading) {
+        <div class="flights-grid">
+          @for (flight of filteredFlights; track flight.id) {
+            <div class="flight-card" (click)="selectFlight(flight)">
+              <!-- Favorite Button -->
+              <button 
+                class="fav-btn"
+                [class.active]="isFavorite(flight)"
+                (click)="toggleFavorite(flight, $event)">
+                {{ isFavorite(flight) ? '❤️' : '🤍' }}
+              </button>
+
+              <!-- Flight Header -->
+              <div class="flight-header">
+                <div class="airline">
+                  <h3>{{ flight.airline }}</h3>
+                  <span class="flight-number">{{ flight.flightNumber }}</span>
+                </div>
+                <div class="price">
+                  <span class="amount">{{ formatPrice(flight.price) }}</span>
+                  <span class="per-person">per person</span>
+                </div>
+              </div>
+
+              <!-- Flight Details -->
+              <div class="flight-details">
+                <div class="route-info">
+                  <div class="location">
+                    <span class="time">{{ flight.departureTime }}</span>
+                    <span class="city">{{ flight.from }}</span>
+                  </div>
+                  
+                  <div class="journey">
+                    <span class="duration">{{ flight.duration }}</span>
+                    <div class="route-line">
+                      <div class="dot"></div>
+                      <div class="line"></div>
+                      <div class="dot"></div>
+                    </div>
+                    @if (flight.stops === 0) {
+                      <span class="stops direct">Direct</span>
+                    } @else {
+                      <span class="stops">{{ flight.stops }} stop(s)</span>
+                    }
+                  </div>
+                  
+                  <div class="location">
+                    <span class="time">{{ flight.arrivalTime }}</span>
+                    <span class="city">{{ flight.to }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flight Footer -->
+              <div class="flight-footer">
+                <div class="class-badge">
+                  {{ flight.class | titlecase }}
+                </div>
+                <div class="seats-info">
+                  <span class="seats-icon">💺</span>
+                  {{ flight.availableSeats }} seats left
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </main>
+  </div>
+</div>

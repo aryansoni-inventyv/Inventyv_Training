@@ -1,0 +1,67 @@
+
+<div class="task-item">
+  
+  <!-- Checkbox -->
+  <div class="task-checkbox">
+    <input 
+      type="checkbox"
+      [checked]="task.completed"
+      (change)="onToggle()"
+      [id]="'task-' + task.id"
+    >
+    <label [for]="'task-' + task.id"></label>
+  </div>
+
+  <!-- Task Content -->
+  <div class="task-content" [class.completed]="task.completed">
+    
+    <!-- Title -->
+    <h3>{{ task.title }}</h3>
+    
+    <!-- Description -->
+    <p class="description">{{ task.description }}</p>
+    
+    <!-- Meta Info -->
+    <div class="task-meta">
+      
+      <!-- Priority Badge -->
+      <span 
+        class="priority-badge"
+        [style.background-color]="priorityColor"
+      >
+        {{ task.priority | uppercase }}
+      </span>
+      
+      <!-- Due Date -->
+      <span class="due-date" [class.overdue]="isOverdue">
+        📅 {{ task.duedate | date:'shortDate' }}
+        <span *ngIf="isOverdue" class="overdue-text">⚠️ Overdue</span>
+      </span>
+      
+      <!-- Created Date -->
+      <span class="created-date">
+        Created: {{ task.createdAt | date:'short' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="task-actions">
+    <button 
+      class="btn-action btn-edit"
+      (click)="onEdit()"
+      title="Edit task"
+    >
+      ✏️
+    </button>
+    
+    <button 
+      class="btn-action btn-delete"
+      (click)="onDelete()"
+      title="Delete task"
+    >
+      🗑️
+    </button>
+  </div>
+
+</div>
