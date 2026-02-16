@@ -1,0 +1,248 @@
+<!-- src/app/component/car/car-component/car-component.component.html -->
+<div class="car-search-container">
+  <div class="search-header">
+    <h1>🚗 Rent a Car</h1>
+    <p>Find the perfect car for your journey</p>
+  </div>
+
+  <div class="search-card">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+      
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label for="pickupLocation">Pickup Location</label>
+          <input 
+            type="text" 
+            id="pickupLocation"
+            formControlName="pickupLocation" 
+            placeholder="Enter city or airport"
+            class="form-control">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="checkbox-container">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [checked]="sameDropoff"
+              (change)="toggleSameDropoff()">
+            <span>Return to same location</span>
+          </label>
+        </div>
+      </div>
+
+      @if (!sameDropoff) {
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="dropoffLocation">Drop-off Location</label>
+            <input 
+              type="text" 
+              id="dropoffLocation"
+              formControlName="dropoffLocation" 
+              placeholder="Enter return city or airport"
+              class="form-control">
+          </div>
+        </div>
+      }
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pickupDate">Pickup Date</label>
+          <input 
+            type="date" 
+            id="pickupDate"
+            formControlName="pickupDate"
+            [min]="minDate"
+            class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="pickupTime">Pickup Time</label>
+          <input 
+            type="time" 
+            id="pickupTime"
+            formControlName="pickupTime"
+            class="form-control">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dropoffDate">Drop-off Date</label>
+          <input 
+            type="date" 
+            id="dropoffDate"
+            formControlName="dropoffDate"
+            [min]="searchForm.get('pickupDate')?.value || minDate"
+            class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="dropoffTime">Drop-off Time</label>
+          <input 
+            type="time" 
+            id="dropoffTime"
+            formControlName="dropoffTime"
+            class="form-control">
+        </div>
+
+        @if (calculateDays() > 0) {
+          <div class="days-badge">
+            {{ calculateDays() }} day(s)
+          </div>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="search-button">
+          🔍 Search Cars
+        </button>
+        <button type="button" class="reset-button" (click)="onReset()">
+          🔄 Reset / Show All
+        </button>
+        <button type="button" class="back-button" routerLink="/home">
+          ← Back to Home
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Quick Search -->
+  <div class="quick-search-section">
+
+  <div class="search-wrapper">
+
+    <!-- Magnifier Icon -->
+    <span class="search-icon">🔍</span>
+
+    <!-- Input -->
+    <input
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onSearchQueryChange()"
+      placeholder="Quick search by brand, model, or location..."
+      class="expand-input"
+    />
+
+    <!-- Clear Button -->
+    @if (searchQuery) {
+      <button class="clear-btn" (click)="clearSearch()">✕</button>
+    }
+
+  </div>
+
+  <!-- Search Hint -->
+  @if (searchQuery) {
+    <p class="search-hint">
+      Searching for: "<strong>{{ searchQuery }}</strong>"
+    </p>
+  }
+
+</div>
+
+
+  <!-- Results -->
+  <div class="results-section">
+    <div class="results-header">
+      <h2>
+        @if (filteredCars.length === allCars.length) {
+          All Available Cars ({{ filteredCars.length }})
+        } @else {
+          Search Results ({{ filteredCars.length }})
+        }
+      </h2>
+    </div>
+
+    @if (loading) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading cars...</p>
+      </div>
+    }
+
+    @if (!loading && filteredCars.length === 0) {
+      <div class="no-results">
+        <h3>No cars found</h3>
+        <p>Try different search criteria or click Reset</p>
+        <button class="btn-primary" (click)="onReset()">Show All Cars</button>
+      </div>
+    }
+
+    @if (!loading && filteredCars.length > 0) {
+      <div class="cars-grid">
+        @for (car of filteredCars; track car.id) {
+          <div class="car-card" (click)="selectCar(car)">
+            <button 
+              class="fav-btn"
+              [class.active]="isFavorite(car)"
+              (click)="toggleFavorite(car, $event)">
+              {{ isFavorite(car) ? '❤️' : '🤍' }}
+            </button>
+
+            <div class="car-image">
+              <div class="car-type-badge">{{ car.type | titlecase }}</div>
+            </div>
+
+            <div class="car-info">
+              <div class="car-header">
+                <div>
+                  <h3>{{ car.brand }} {{ car.model }}</h3>
+                  <div class="car-year">{{ car.year }} Model</div>
+                </div>
+                <div class="rating">
+                  @for (star of getStarArray(car.rating); track $index) {
+                    <span class="star">⭐</span>
+                  }
+                  <span class="rating-value">{{ car.rating }}</span>
+                </div>
+              </div>
+
+              <div class="specifications">
+                <div class="spec-item">
+                  <span class="icon">👥</span>
+                  <span>{{ car.seats }} Seats</span>
+                </div>
+                <div class="spec-item">
+                  <span class="icon">🚪</span>
+                  <span>{{ car.doors }} Doors</span>
+                </div>
+                <div class="spec-item">
+                  <span class="icon">🧳</span>
+                  <span>{{ car.luggage }} Bags</span>
+                </div>
+                <div class="spec-item">
+                  <span class="icon">{{ getTransmissionIcon(car.transmission) }}</span>
+                  <span>{{ car.transmission | titlecase }}</span>
+                </div>
+                <div class="spec-item">
+                  <span class="icon">{{ getFuelTypeIcon(car.fuelType) }}</span>
+                  <span>{{ car.fuelType | titlecase }}</span>
+                </div>
+              </div>
+
+              <div class="features">
+                @for (feature of car.features; track feature) {
+                  <span class="feature-badge">{{ feature }}</span>
+                }
+              </div>
+
+              <div class="car-footer">
+                <div class="rental-company">
+                  <span class="label">{{ car.rentalCompany }}</span>
+                </div>
+                
+                <div class="pricing">
+                  <div class="price-per-day">
+                    <span class="amount">{{ formatPrice(car.pricePerDay) }}</span>
+                    <span class="per-text">per day</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

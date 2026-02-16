@@ -1,0 +1,117 @@
+/* FILE: src/app/components/home/home.component.css */
+
+.home-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.date {
+  text-align: center;
+  color: #7f8c8d;
+  font-size: 0.9em;
+  margin-bottom: 30px;
+}
+
+.welcome-box {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 10px;
+  margin: 20px 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-box h2 {
+  margin-top: 0;
+  font-size: 1.8em;
+}
+
+.btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: #2980b9;
+}
+
+.btn-primary {
+  background-color: #27ae60;
+  font-size: 1.1em;
+  padding: 15px 30px;
+}
+
+.btn-primary:hover {
+  background-color: #229954;
+}
+
+.features {
+  margin: 40px 0;
+}
+
+.features h2 {
+  color: #2c3e50;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  padding: 12px;
+  margin: 8px 0;
+  background-color: #ecf0f1;
+  border-radius: 5px;
+  border-left: 4px solid #3498db;
+  transition: transform 0.2s;
+}
+
+.features li:hover {
+  transform: translateX(5px);
+  background-color: #d5dbdb;
+}
+
+.navigation {
+  text-align: center;
+  margin: 50px 0;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+}
+
+.navigation h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.info-box {
+  margin-top: 30px;
+  padding: 20px;
+  border: 2px dashed #95a5a6;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.info-box p {
+  margin: 0;
+  color: #34495e;
+}

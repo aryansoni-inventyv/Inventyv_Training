@@ -1,0 +1,257 @@
+<!-- src/app/component/flight/flight-component/flight-component.component.html -->
+<div class="flight-search-container">
+  <div class="search-header">
+    <h1>✈️ Search Flights</h1>
+    <p>Find the best flights at the lowest prices</p>
+  </div>
+
+  <!-- Search Form Card -->
+  <div class="search-card">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+
+      <!-- Trip Type -->
+      <div class="form-row">
+        <div class="form-group-radio">
+          <label class="radio-label">
+            <input type="radio" formControlName="tripType" value="one-way">
+            <span>One-way</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" formControlName="tripType" value="round-trip">
+            <span>Round-trip</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- From and To -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="from">From</label>
+          <input type="text" id="from" formControlName="from" placeholder="Enter departure city" class="form-control"
+            [class.error]="hasError('from', 'required')">
+          @if (hasError('from', 'required')) {
+          <span class="error-message">Departure city is required</span>
+          }
+        </div>
+
+        <button type="button" class="swap-button" (click)="swapCities()">⇄</button>
+
+        <div class="form-group">
+          <label for="to">To</label>
+          <input type="text" id="to" formControlName="to" placeholder="Enter destination city" class="form-control"
+            [class.error]="hasError('to', 'required')">
+          @if (hasError('to', 'required')) {
+          <span class="error-message">Destination city is required</span>
+          }
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="departureDate">Departure Date</label>
+          <input type="date" id="departureDate" formControlName="departureDate" [min]="minDate" class="form-control"
+            [class.error]="hasError('departureDate', 'required')">
+          @if (hasError('departureDate', 'required')) {
+          <span class="error-message">Departure date is required</span>
+          }
+        </div>
+
+        @if (searchForm.get('tripType')?.value === 'round-trip') {
+        <div class="form-group">
+          <label for="returnDate">Return Date</label>
+          <input type="date" id="returnDate" formControlName="returnDate"
+            [min]="searchForm.get('departureDate')?.value || minDate" class="form-control">
+        </div>
+        }
+      </div>
+
+      <!-- Passengers and Class -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="passengers">Passengers</label>
+          <input type="number" id="passengers" formControlName="passengers" min="1" max="9" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="class">Class</label>
+          <select id="class" formControlName="class" class="form-control">
+            <option value="economy">Economy</option>
+            <option value="business">Business</option>
+            <option value="first">First Class</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="search-button" [disabled]="searchForm.invalid">
+          🔍 Search Flights
+        </button>
+        <button type="button" class="reset-button" (click)="onReset()">
+          🔄 Reset / Show All
+        </button>
+        <button type="button" class="back-button" routerLink="/home">
+          ← Back to Home
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Quick Search -->
+  <div class="quick-search-section">
+  <div class="search-wrapper">
+
+    <!-- Magnifier Icon -->
+    <span class="search-icon">🔍</span>
+
+    <!-- Input -->
+    <input
+      type="text"
+      class="expand-input"
+      placeholder="Search airline, city or flight..."
+      [(ngModel)]="quickSearchText"
+      (input)="onQuickSearch()"
+    />
+
+    <!-- Clear Button -->
+    @if (quickSearchText) {
+      <button class="clear-btn" (click)="clearQuickSearch()">✕</button>
+    }
+
+  </div>
+</div>
+
+
+
+  <!-- Results Section -->
+  <div class="results-section">
+    <div class="results-header">
+      <h2>
+        @if (filteredFlights.length === allFlights.length) {
+        All Available Flights ({{ filteredFlights.length }})
+        } @else {
+        Search Results ({{ filteredFlights.length }})
+        }
+      </h2>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading flights...</p>
+    </div>
+    }
+
+    <!-- No Results -->
+    @if (!loading && filteredFlights.length === 0) {
+    <div class="no-results">
+      <h3>No flights found</h3>
+      <p>Try adjusting your search criteria or click "Reset" to see all flights</p>
+      <button class="btn-primary" (click)="onReset()">Show All Flights</button>
+    </div>
+    }
+
+    <!-- Flight Cards -->
+    @if (!loading && filteredFlights.length > 0) {
+    <div class="flights-grid">
+      @for (flight of filteredFlights; track flight.id) {
+      <div class="flight-card" (click)="selectFlight(flight)">
+
+        <!-- Favorite Button -->
+        <button class="fav-btn" [class.active]="isFavorite(flight)" (click)="toggleFavorite(flight, $event)">
+          {{ isFavorite(flight) ? '❤️' : '🤍' }}
+        </button>
+
+        <!-- Flight Header -->
+        <div class="flight-header">
+          <div class="airline">
+            <h3>{{ flight.airline }}</h3>
+            <span class="flight-number">{{ flight.flightNumber }}</span>
+          </div>
+          <div class="price">
+            <span class="amount">{{ formatPrice(flight.price) }}</span>
+            <span class="per-person">per person</span>
+          </div>
+        </div>
+
+        <!-- Flight Details -->
+        <div class="flight-details">
+          <div class="route-info">
+            <div class="location">
+              <span class="time">{{ flight.departureTime }}</span>
+              <span class="city">{{ flight.from }}</span>
+            </div>
+
+            <div class="journey">
+              <span class="duration">{{ flight.duration }}</span>
+              <div class="route-line">
+                <div class="dot"></div>
+                <div class="line"></div>
+                <div class="dot"></div>
+              </div>
+              @if (flight.stops === 0) {
+              <span class="stops direct">Direct</span>
+              } @else {
+              <span class="stops">{{ flight.stops }} stop(s)</span>
+              }
+            </div>
+
+            <div class="location">
+              <span class="time">{{ flight.arrivalTime }}</span>
+              <span class="city">{{ flight.to }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flight Footer -->
+        <div class="flight-footer">
+          <div class="flight-info">
+            <span class="date">📅 {{ flight.date }}</span>
+            <span class="class-badge">{{ flight.class | titlecase }}</span>
+          </div>
+          <div class="seats-info">
+            <span class="seats-icon">💺</span>
+            {{ flight.availableSeats }} seats left
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Recent Searches (moved to bottom) -->
+  @if (recentSearches.length > 0) {
+  <div class="recent-searches">
+    <h3>Recent Searches</h3>
+    <div class="recent-list">
+      @for (search of recentSearches; track search.timestamp) {
+      <div class="recent-item" (click)="useRecentSearch(search)">
+        <div class="recent-route">
+          <span class="city">{{ search.from }}</span>
+          <span class="arrow">→</span>
+          <span class="city">{{ search.to }}</span>
+        </div>
+        <div class="recent-details">
+          <span>{{ search.departureDate }}</span>
+          <span>{{ search.passengers }} passenger(s)</span>
+          <span class="badge">{{ search.class }}</span>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>
+
+<!--
+✨ NEW LAYOUT:
+1. Search form at top
+2. Results shown immediately below
+3. All flights shown by default
+4. Search button filters the results
+5. Reset button shows all flights again
+6. Recent searches at bottom
+-->

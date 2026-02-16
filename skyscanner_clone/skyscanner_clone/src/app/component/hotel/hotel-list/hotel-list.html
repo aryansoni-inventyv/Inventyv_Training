@@ -1,0 +1,205 @@
+<!-- src/app/component/hotel/hotel-list/hotel-list.component.html -->
+<div class="hotel-list-container">
+  <!-- Header -->
+  <div class="results-header">
+    <button class="back-btn" (click)="backToSearch()">← Back to Search</button>
+    <h1>Hotel Results</h1>
+    <p class="search-summary">
+      {{ searchCriteria.destination }} • 
+      {{ searchCriteria.checkInDate }} → {{ searchCriteria.checkOutDate }} • 
+      {{ calculateNights() }} night(s) • 
+      {{ searchCriteria.guests }} guest(s) • 
+      {{ searchCriteria.rooms }} room(s)
+    </p>
+  </div>
+
+  <div class="results-layout">
+    <!-- Filters Sidebar -->
+    <aside class="filters-sidebar">
+      <h3>Filters</h3>
+
+      <!-- Price Filter -->
+      <div class="filter-group">
+        <label>Max Price per Night: {{ formatPrice(maxPrice) }}</label>
+        <input 
+          type="range" 
+          [(ngModel)]="maxPrice"
+          min="0" 
+          max="50000" 
+          step="1000"
+          (input)="onFilterChange()"
+          class="price-slider">
+      </div>
+
+      <!-- Rating Filter -->
+      <div class="filter-group">
+        <label>Minimum Rating</label>
+        <select [(ngModel)]="selectedRating" (change)="onFilterChange()" class="filter-select">
+          <option [value]="0">All Ratings</option>
+          <option [value]="3">3+ Stars</option>
+          <option [value]="4">4+ Stars</option>
+          <option [value]="5">5 Stars Only</option>
+        </select>
+      </div>
+
+      <!-- Amenities Filter -->
+      <div class="filter-group">
+        <label>Amenities</label>
+        <div class="amenities-list">
+          @for (amenity of availableAmenities.slice(0, 6); track amenity) {
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                [checked]="isAmenitySelected(amenity)"
+                (change)="toggleAmenity(amenity)">
+              <span>{{ amenity }}</span>
+            </label>
+          }
+        </div>
+      </div>
+
+      <!-- Sort Options -->
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select [(ngModel)]="sortBy" (change)="onFilterChange()" class="filter-select">
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Highest Rated</option>
+          <option value="reviews">Most Reviewed</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- Results -->
+    <main class="results-main">
+      <!-- Loading State -->
+      @if (loading) {
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Searching for hotels...</p>
+        </div>
+      }
+
+      <!-- No Results -->
+      @if (!loading && filteredHotels.length === 0) {
+        <div class="no-results">
+          <h2>No hotels found</h2>
+          <p>Try adjusting your filters or search criteria</p>
+          <button class="btn-primary" (click)="backToSearch()">New Search</button>
+        </div>
+      }
+
+      <!-- Results Count -->
+      @if (!loading && filteredHotels.length > 0) {
+        <div class="results-count">
+          Found {{ filteredHotels.length }} hotel(s)
+        </div>
+      }
+
+      <!-- Hotel Cards -->
+      @if (!loading) {
+        <div class="hotels-grid">
+          @for (hotel of filteredHotels; track hotel.id) {
+            <div class="hotel-card" (click)="selectHotel(hotel)">
+              <!-- Favorite Button -->
+              <button 
+                class="fav-btn"
+                [class.active]="isFavorite(hotel)"
+                (click)="toggleFavorite(hotel, $event)">
+                {{ isFavorite(hotel) ? '❤️' : '🤍' }}
+              </button>
+
+              <!-- Hotel Image Placeholder -->
+              <div class="hotel-image">
+                <div class="image-overlay">
+                  @if (hotel.freeCancellation) {
+                    <span class="free-cancel-badge">Free Cancellation</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Hotel Info -->
+              <div class="hotel-info">
+                <div class="hotel-header">
+                  <div>
+                    <h3>{{ hotel.name }}</h3>
+                    <div class="location">
+                      <span class="icon">📍</span>
+                      <span>{{ hotel.location }}, {{ hotel.city }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="rating-section">
+                    <div class="stars">
+                      @for (star of getStarArray(hotel.rating); track $index) {
+                        <span class="star filled">⭐</span>
+                      }
+                      @for (star of getEmptyStarArray(hotel.rating); track $index) {
+                        <span class="star empty">☆</span>
+                      }
+                    </div>
+                    <div class="review-score">
+                      <span class="score">{{ hotel.reviewScore }}/10</span>
+                      <span class="review-count">({{ hotel.reviewCount }} reviews)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Amenities -->
+                <div class="amenities">
+                  @for (amenity of hotel.amenities.slice(0, 4); track amenity) {
+                    <span class="amenity-badge">{{ amenity }}</span>
+                  }
+                  @if (hotel.amenities.length > 4) {
+                    <span class="amenity-badge more">+{{ hotel.amenities.length - 4 }} more</span>
+                  }
+                </div>
+
+                <!-- Pricing -->
+                <div class="pricing">
+                  <div class="price-info">
+                    <div class="price-per-night">
+                      <span class="amount">{{ formatPrice(hotel.pricePerNight) }}</span>
+                      <span class="per-text">per night</span>
+                    </div>
+                    <div class="total-price">
+                      <span class="label">Total for {{ calculateNights() }} night(s):</span>
+                      <span class="total">{{ formatPrice(hotel.pricePerNight * calculateNights() * searchCriteria.rooms) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </main>
+  </div>
+</div>
+
+<!--
+HOTEL LIST TEMPLATE FEATURES:
+
+1. Visual Differences from Flights:
+   - Hotel image placeholder with overlay
+   - Star rating display with filled/empty stars
+   - Review score (x/10) with count
+   - Amenities badges
+   - Free cancellation badge
+   - Total price calculation displayed
+
+2. Amenities Filter:
+   - Checkbox list for multi-select
+   - Shows top 6 most common amenities
+   
+3. Pricing Display:
+   - Price per night (main price)
+   - Total cost (nights × rooms × price)
+   - Clear breakdown for transparency
+
+4. Enhanced Information:
+   - Location with icon
+   - Visual star rating
+   - Review score and count
+   - Up to 4 amenities shown, "+X more" for rest
+-->

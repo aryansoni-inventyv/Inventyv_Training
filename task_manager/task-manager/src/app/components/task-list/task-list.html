@@ -1,0 +1,94 @@
+<!-- FILE: src/app/components/task-list/task-list.html -->
+
+<div class="task-list-container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>My Tasks</h1>
+    
+    <button 
+      class="btn btn-primary" 
+      (click)="toggleForm()"
+      *ngIf="!showForm"
+    >
+      ➕ Add New Task
+    </button>
+  </div>
+
+  <!-- TASK FORM -->
+  <div *ngIf="showForm" class="form-section">
+    <app-task-form 
+      [editTask]="editingTask"
+      (formSubmitted)="onFormSubmitted()"
+    ></app-task-form>
+  </div>
+
+  <!-- FILTER BUTTONS -->
+  <div class="filters">
+    <button 
+      *ngFor="let filter of ['all', 'active', 'completed']"
+      class="filter-btn"
+      [class.active]="currentFilter === filter"
+      (click)="setFilter(filter)"
+    >
+      {{ filter | titlecase }} 
+      <span class="badge">
+        {{ filter === 'all' ? taskCounts.all : 
+           filter === 'active' ? taskCounts.active : 
+           taskCounts.completed }}
+      </span>
+    </button>
+  </div>
+
+  <!-- SORT OPTIONS -->
+  <div class="sort-options">
+    <span>Sort by:</span>
+    <button class="sort-btn" (click)="sortByPriority()">
+      Priority
+    </button>
+    <button class="sort-btn" (click)="sortByDueDate()">
+      Due Date
+    </button>
+  </div>
+
+  <!-- TASK LIST -->
+  <div class="tasks">
+    
+    <!-- NO TASKS MESSAGE -->
+    <div *ngIf="filteredTasks.length === 0" class="no-tasks">
+      <p>📝 No tasks found.</p>
+      <p *ngIf="currentFilter !== 'all'">
+        Try changing the filter or add a new task!
+      </p>
+    </div>
+
+    <!-- ✅ FIXED: trackBy function reference -->
+    <div 
+      *ngFor="let task of filteredTasks; let i = index; trackBy: trackByTaskId"
+      class="task-card"
+      [class.completed]="task.completed"
+      [class.high-priority]="task.priority === 'high'"
+      appHighlight
+    >
+      
+      <app-task-item
+        [task]="task"
+        [index]="i"
+        (toggleComplete)="onToggleComplete($event)"
+        (deleteTask)="onDeleteTask($event)"
+        (editTask)="onEditTask($event)"
+      ></app-task-item>
+
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary" *ngIf="tasks.length > 0">
+    <p>
+      Total: <strong>{{ taskCounts.all }}</strong> tasks | 
+      Active: <strong>{{ taskCounts.active }}</strong> | 
+      Completed: <strong>{{ taskCounts.completed }}</strong>
+    </p>
+  </div>
+
+</div>

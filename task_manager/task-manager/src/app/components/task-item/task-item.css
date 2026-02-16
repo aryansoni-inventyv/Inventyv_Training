@@ -1,0 +1,105 @@
+.task-item {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.task-checkbox {
+  flex-shrink: 0;
+  padding-top: 5px;
+}
+
+.task-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-content h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 1.2em;
+}
+
+.task-content.completed h3 {
+  text-decoration: line-through;
+  color: #95a5a6;
+}
+
+.description {
+  margin: 0 0 12px 0;
+  color: #555;
+  line-height: 1.5;
+}
+
+.task-content.completed .description {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.task-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.85em;
+}
+
+.priority-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.due-date {
+  color: #7f8c8d;
+}
+
+.due-date.overdue {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.overdue-text {
+  font-size: 0.9em;
+}
+
+.created-date {
+  color: #95a5a6;
+  font-size: 0.9em;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-action {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2em;
+  transition: all 0.3s;
+  background-color: #ecf0f1;
+}
+
+.btn-action:hover {
+  transform: scale(1.1);
+}
+
+.btn-edit:hover {
+  background-color: #3498db;
+}
+
+.btn-delete:hover {
+  background-color: #e74c3c;
+}
+

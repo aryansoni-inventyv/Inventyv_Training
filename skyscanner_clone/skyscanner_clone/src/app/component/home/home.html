@@ -1,0 +1,129 @@
+<div class="home-container">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h1>Discover the World With Confidence</h1>
+      <p>
+        Compare flights, hotels & car rentals instantly.
+        Plan smarter. Travel better.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ================= SEARCH CARD ================= -->
+  <section class="search-section">
+    <div class="search-card">
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button
+          class="tab"
+          [class.active]="activeTab === 'flights'"
+          (click)="selectTab('flights')">
+          ✈ Flights
+        </button>
+
+        <button
+          class="tab"
+          [class.active]="activeTab === 'hotels'"
+          (click)="selectTab('hotels')">
+          🏨 Hotels
+        </button>
+
+        <button
+          class="tab"
+          [class.active]="activeTab === 'cars'"
+          (click)="selectTab('cars')">
+          🚗 Cars
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="tab-panel">
+
+        @if (activeTab === 'flights') {
+          <div class="panel-content">
+            <h2>Find Your Perfect Flight</h2>
+            <p>Search across hundreds of airlines worldwide.</p>
+            <button class="primary-btn type1" routerLink="/flights">
+              Search Flights
+            </button>
+          </div>
+        }
+
+        @if (activeTab === 'hotels') {
+          <div class="panel-content">
+            <h2>Book Your Ideal Stay</h2>
+            <p>Compare hotel deals from trusted providers.</p>
+            <button class="primary-btn type1" routerLink="/hotels">
+              Search Hotels
+            </button>
+          </div>
+        }
+
+        @if (activeTab === 'cars') {
+          <div class="panel-content">
+            <h2>Rent a Car Anywhere</h2>
+            <p>Affordable rentals with flexible cancellation.</p>
+            <button class="primary-btn type1" routerLink="/cars">
+              Search Cars
+            </button>
+          </div>
+        }
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= STATS ================= -->
+  <section class="stats">
+    <div class="stats-grid">
+      <div class="stat">
+        <h3>500K+</h3>
+        <p>Happy Travelers</p>
+      </div>
+      <div class="stat">
+        <h3>120+</h3>
+        <p>Countries Covered</p>
+      </div>
+      <div class="stat">
+        <h3>1M+</h3>
+        <p>Bookings Completed</p>
+      </div>
+      <div class="stat">
+        <h3>24/7</h3>
+        <p>Customer Support</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= FEATURES ================= -->
+  <section class="features">
+    <h2>Why Choose TravelHub?</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <h4>Best Price Guarantee</h4>
+        <p>We compare multiple platforms to get you the best deals.</p>
+      </div>
+
+      <div class="feature-card">
+        <h4>Secure Payments</h4>
+        <p>Advanced encryption ensures your data stays safe.</p>
+      </div>
+
+      <div class="feature-card">
+        <h4>Flexible Booking</h4>
+        <p>Easy cancellation options on most bookings.</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+  

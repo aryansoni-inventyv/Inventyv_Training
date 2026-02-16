@@ -1,0 +1,54 @@
+
+
+
+<div class="home-container">
+  
+  <!-- INTERPOLATION: Display component properties -->
+  <h1>{{ appTitle }}</h1>
+  
+  <!-- PROPERTY BINDING: Bind to element properties -->
+  <p [innerHTML]="'Welcome to your task manager!'"></p>
+  
+  <!-- STRING INTERPOLATION with PIPE -->
+  <p class="date">Today is: {{ currentDate | date:'fullDate' }}</p>
+
+  <!-- STRUCTURAL DIRECTIVE: *ngIf - Conditional rendering -->
+  <div *ngIf="showWelcome" class="welcome-box">
+    <h2>👋 Welcome!</h2>
+    <p>This app demonstrates all Angular basics.</p>
+  </div>
+
+  <!-- EVENT BINDING: Listen to click events -->
+  <button (click)="toggleWelcome()" class="btn">
+    {{ showWelcome ? 'Hide' : 'Show' }} Welcome Message
+  </button>
+
+  <!-- Features Section -->
+  <div class="features">
+    <h2>Features</h2>
+    
+    <!-- STRUCTURAL DIRECTIVE: *ngFor - Loop through arrays -->
+    <ul>
+      <li *ngFor="let feature of features; let i = index">
+        <!-- INDEX variable from *ngFor -->
+        <strong>{{ i + 1 }}.</strong> {{ feature }}
+      </li>
+    </ul>
+  </div>
+
+  <!-- Navigation to Task List -->
+  <div class="navigation">
+    <h3>Ready to start?</h3>
+    
+    <!-- ROUTING: Navigate to tasks page -->
+    <a routerLink="/tasks" class="btn btn-primary">
+      Go to Tasks →
+    </a>
+  </div>
+
+  <!-- Info Box with Custom Directive -->
+  <div class="info-box" appHighlight>
+    <p><strong>💡 Tip:</strong> Hover over this box to see the highlight directive!</p>
+  </div>
+
+</div>

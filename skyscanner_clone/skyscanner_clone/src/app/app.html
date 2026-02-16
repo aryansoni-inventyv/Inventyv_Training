@@ -1,0 +1,131 @@
+<!-- src/app/app.component.html -->
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="nav-container">
+    <!-- Logo/Brand -->
+    <div class="nav-brand" (click)="goHome()">
+      <span class="logo-icon">✈️</span>
+      <span class="logo-text">TravelHub</span>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <div class="nav-links desktop-nav">
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        Home
+      </a>
+      <a routerLink="/flights" routerLinkActive="active">
+        Flights
+      </a>
+      <a routerLink="/hotels" routerLinkActive="active">
+        Hotels
+      </a>
+      <a routerLink="/cars" routerLinkActive="active">
+        Cars
+      </a>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+      <span class="hamburger" [class.open]="mobileMenuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  @if (mobileMenuOpen) {
+    <div class="mobile-nav" (click)="closeMobileMenu()">
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        🏠 Home
+      </a>
+      <a routerLink="/flights" routerLinkActive="active">
+        ✈️ Flights
+      </a>
+      <a routerLink="/hotels" routerLinkActive="active">
+        🏨 Hotels
+      </a>
+      <a routerLink="/cars" routerLinkActive="active">
+        🚗 Cars
+      </a>
+    </div>
+  }
+</nav>
+
+<!-- Main Content Area (Your Pages Render Here) -->
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>TravelHub</h3>
+        <p>Your one-stop solution for flights, hotels, and car rentals.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a routerLink="/flights">Search Flights</a></li>
+          <li><a routerLink="/hotels">Find Hotels</a></li>
+          <li><a routerLink="/cars">Rent a Car</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#" (click)="$event.preventDefault()">About Us</a></li>
+          <li><a href="#" (click)="$event.preventDefault()">Contact</a></li>
+          <li><a href="#" (click)="$event.preventDefault()">Terms of Service</a></li>
+          <li><a href="#" (click)="$event.preventDefault()">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 TravelHub. All rights reserved. Built with Angular 21.</p>
+    </div>
+  </div>
+</footer>
+
+<!--
+APP COMPONENT TEMPLATE EXPLANATION:
+
+Structure:
+1. Navigation Bar (Sticky at top)
+2. Main Content (<router-outlet>)
+3. Footer (Always at bottom)
+
+Navigation Features:
+- routerLink: Navigate without page reload
+- routerLinkActive: Add 'active' class to current route
+- [routerLinkActiveOptions]="{exact: true}": Only match exact path for Home
+
+Mobile Menu:
+- Hamburger icon transforms to X when open
+- @if (mobileMenuOpen): Shows/hides mobile menu
+- Click anywhere on menu to close it
+
+Router Outlet:
+- This is where all your pages (Home, Flights, Hotels, Cars) appear
+- Angular automatically loads the correct component based on the route
+
+Footer:
+- Three columns: Brand, Quick Links, About
+- Copyright notice at bottom
+- Responsive (stacks vertically on mobile)
+
+Key Angular Features Used:
+1. routerLink - Declarative navigation
+2. routerLinkActive - Active route styling
+3. @if - Conditional rendering (Angular 21)
+4. (click) - Event binding
+5. [class.open] - Conditional class binding
+6. <router-outlet> - Component placeholder
+-->

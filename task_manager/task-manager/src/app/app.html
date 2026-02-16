@@ -1,0 +1,30 @@
+<!-- FILE: src/app/app.html -->
+
+<div class="app-container">
+  
+  <nav class="navbar">
+    <div class="nav-brand">
+      <h1>📝 {{ title }}</h1>
+    </div>
+    
+    
+
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        Home
+      </a>
+      <a routerLink="/tasks" routerLinkActive="active">
+        Tasks
+      </a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="footer">
+    <p>Built with Angular 21 🚀</p>
+  </footer>
+
+</div>
