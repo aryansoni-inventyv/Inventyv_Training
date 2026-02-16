@@ -15,7 +15,7 @@
   top: 0;
   z-index: 1000;
   border-bottom: 3px solid transparent;
-  border-image: linear-gradient(90deg, #667eea 0%, #f093fb 50%, #4facfe 100%);
+  border-image: linear-gradient(90deg, #667eea 0%, #094f88 50%, #4facfe 100%);
   border-image-slice: 1;
 }
 
@@ -54,7 +54,7 @@
 .logo-text {
   font-size: 1.8rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #0000b1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -85,7 +85,7 @@
   left: 50%;
   width: 0;
   height: 3px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #667eea, #031453);
   transform: translateX(-50%);
   transition: width 0.3s ease;
 }
@@ -220,7 +220,7 @@
 .footer-section h3 {
   font-size: 1.8rem;
   margin-bottom: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+  background: linear-gradient(135deg, #667eea 0%, #020283 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

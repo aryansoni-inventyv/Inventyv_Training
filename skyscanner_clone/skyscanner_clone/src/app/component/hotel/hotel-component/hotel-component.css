@@ -83,7 +83,7 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #7c3aed;
+  border-color: #0217d8;
   box-shadow:
     0 0 0 4px rgba(124, 58, 237, 0.08),
     0 10px 25px rgba(124, 58, 237, 0.08);
@@ -124,20 +124,22 @@
   font-size: 18px;
   letter-spacing: 1px;
   text-decoration: none;
-  color: #725AC1;
+  color: #002cbc;
   background: transparent;
   cursor: pointer;
   transition: ease-out 0.5s;
-  border: 2px solid #725AC1;
+  border: 2px solid #003b99;
   border-radius: 10px;
-  box-shadow: inset 0 0 0 0 #725AC1;
+  box-shadow: inset 0 0 0 0 #0331ff;
+    width: 300px;
+
 }
 
 .search-button:hover {
   transform: translateY(-3px);
   
   color: white;
-  box-shadow: inset 0 -100px 0 0 #725AC1;
+  box-shadow: inset 0 -100px 0 0 #2e6aeb;
 }
 
 .search-button:active {
@@ -156,6 +158,8 @@
 .reset-button {
   background: #f1f5f9;
   border: none;
+    width: 300px;
+
 }
 
 .reset-button:hover {
@@ -164,12 +168,14 @@
 
 .back-button {
   background: transparent;
-  border: 2px solid #7c3aed;
-  color: #7c3aed;
+  border: 2px solid #2c7bd6;
+  color: #11037e;
+    width: 300px;
+
 }
 
 .back-button:hover {
-  background: #7c3aed;
+  background: #0536b0;
   color: white;
 }
 
@@ -266,7 +272,7 @@
 
 .hotel-image {
   height: 190px;
-  background: linear-gradient(135deg, #ede9fe, #fce7f3);
+  background: linear-gradient(135deg, #5fbee7, #3f5feb);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -283,7 +289,7 @@
   top: 15px;
   left: 15px;
   background: white;
-  color: #10b981;
+  color: #63c6f4;
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -326,7 +332,7 @@
 
 .review-score .score {
   font-weight: 700;
-  color: #7c3aed;
+  color: #0122a5;
 }
 
 .review-count {
@@ -345,7 +351,7 @@
 
 .amenity-badge {
   background: #f3e8ff;
-  color: #7c3aed;
+  color: #0213a8;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
@@ -353,7 +359,7 @@
 }
 
 .amenity-badge.more {
-  background: #7c3aed;
+  background: #0b79b0;
   color: white;
 }
 
@@ -362,7 +368,7 @@
 .price-per-night .amount {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #7c3aed;
+  color: #060e9f;
 }
 
 .per-text {

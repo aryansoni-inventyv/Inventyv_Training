@@ -2,13 +2,13 @@
 
 .flight-search-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #050175 100%);
   padding: 40px 20px;
 }
 
 .search-header {
   text-align: center;
-  color: white;
+  color: rgb(4, 113, 172);
   margin-bottom: 40px;
 }
 
@@ -93,7 +93,7 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #4968f5;
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
@@ -108,7 +108,7 @@
 }
 
 .swap-button {
-  background: #667eea;
+  background: #405ee2;
   color: white;
   border: none;
   width: 45px;
@@ -121,7 +121,7 @@
 }
 
 .swap-button:hover {
-  background: #764ba2;
+  background: #020086;
   transform: rotate(180deg);
 }
 
@@ -168,7 +168,7 @@
 }
 
 .reset-button:hover {
-  background: #667eea;
+  background: #5872e5;
   color: white;
 }
 
@@ -224,7 +224,7 @@
   width: 50px;
   height: 50px;
   border: 4px solid #e2e8f0;
-  border-top-color: #667eea;
+  border-top-color: #001367;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -259,7 +259,7 @@
 }
 
 .btn-primary {
-  background: #667eea;
+  background: #506ae1;
   color: white;
   border: none;
   padding: 12px 30px;
@@ -270,7 +270,7 @@
 }
 
 .btn-primary:hover {
-  background: #764ba2;
+  background: #011189;
   transform: translateY(-2px);
 }
 
@@ -420,7 +420,7 @@
 .route-line .line {
   flex: 1;
   height: 2px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #667eea, #0300aa);
 }
 
 .stops {
@@ -458,7 +458,7 @@
 }
 
 .class-badge {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #667eea, #00006b);
   color: white;
   padding: 6px 14px;
   border-radius: 15px;
@@ -511,7 +511,7 @@
 }
 
 .recent-item:hover {
-  border-color: #667eea;
+  border-color: #2d51f4;
   background: #f7fafc;
   transform: translateX(5px);
 }
@@ -706,7 +706,7 @@
 
 .form-control:focus {
   outline: none;
-  border-color: #7c3aed;
+  border-color: #0025b8;
   box-shadow:
     0 0 0 4px rgba(124, 58, 237, 0.08),
     0 10px 25px rgba(124, 58, 237, 0.08);
@@ -737,7 +737,7 @@
 /* ================= SWAP BUTTON ================= */
 
 .swap-button {
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  background: linear-gradient(135deg, #045a85, #037fb4);
   color: white;
   border: none;
   width: 55px;
@@ -770,20 +770,20 @@
   font-size: 18px;
   letter-spacing: 1px;
   text-decoration: none;
-  color: #725AC1;
+  color: #040fac;
   background: transparent;
   cursor: pointer;
   transition: ease-out 0.5s;
-  border: 2px solid #725AC1;
+  border: 2px solid #001ca9;
   border-radius: 10px;
-  box-shadow: inset 0 0 0 0 #725AC1;
+  box-shadow: inset 0 0 0 0 #00468d89;
 }
 
 .search-button:hover {
   transform: translateY(-3px);
   
   color: white;
-  box-shadow: inset 0 -100px 0 0 #725AC1;
+  box-shadow: inset 0 -100px 0 0 #01068d;
 }
 
 .search-button:active {
@@ -806,8 +806,8 @@
 
 .back-button {
   background: transparent;
-  border: 2px solid #7c3aed;
-  color: #7c3aed;
+  border: 2px solid #02689c;
+  color: #0d027c;
 }
 
 /* ================= QUICK SEARCH ================= */
@@ -894,23 +894,23 @@
 .price .amount {
   font-size: 1.7rem;
   font-weight: 800;
-  color: #7c3aed;
+  color: #063be7;
 }
 
 /* Journey line */
 
 .route-line .dot {
-  background: #7c3aed;
+  background: #0140b6;
 }
 
 .route-line .line {
-  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  background: linear-gradient(90deg, #0601a6, #027b99);
 }
 
 /* Class badge */
 
 .class-badge {
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  background: linear-gradient(135deg, #0601a6, #027b99);
   color: white;
   padding: 6px 14px;
   border-radius: 20px;

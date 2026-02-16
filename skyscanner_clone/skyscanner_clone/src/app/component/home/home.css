@@ -11,7 +11,7 @@
 .hero {
   height: 85vh;
   background: linear-gradient(rgba(15,23,42,0.75), rgba(15,23,42,0.75)),
-              url('https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=2210&quality=70');
+              url('https://previews.123rf.com/images/4045qd/4045qd1708/4045qd170800611/84249693-nature-landscape-scenery-view-of-a-waterfall.jpg');
   background-size: cover;
   background-position: center;
   display: flex;
@@ -30,13 +30,13 @@
   font-size: 3.2rem;
   font-weight: 800;
   margin-bottom: 20px;
-  color: #2563eb;
+  color: #004ef7;
 }
 
 .hero p {
   font-size: 1.3rem;
   opacity: 0.9;
-  color: #6e96ee;
+  color: #0278bc;
 }
 
 /* =============== SEARCH CARD =============== */
@@ -78,7 +78,7 @@
 }
 
 .tab.active {
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  background: linear-gradient(135deg, #0278bc, #3b82f6);
   color: white;
   box-shadow: 0 8px 20px rgba(37,99,235,0.3);
 }
@@ -126,7 +126,7 @@
   content: "Thanks";
   height: 50px;
   width: 150px;
-  background-color: #008080;
+  background-color: #0278bc;
   color: #fff;
   position: absolute;
   top: 0%;
@@ -145,7 +145,7 @@
   height: 50px;
   width: 150px;
   background-color: #fff;
-  color: #008080;
+  color: #0278bc;
   position: absolute;
   top: 0%;
   left: 0%;
@@ -253,4 +253,122 @@
   .tabs {
     flex-direction: column;
   }
+}
+
+
+
+/* ===== SECTION BACKGROUND ===== */
+
+.stats,
+.features {
+  padding: 60px 20px;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.features h2 {
+  margin-bottom: 40px;
+  font-size: 28px;
+  color: #222;
+}
+
+/* ===== GRID ===== */
+
+.stats-grid,
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* ===== LIGHT ANIMATED CARD ===== */
+
+.stat,
+.feature-card {
+  position: relative;
+  padding: 40px 20px;
+  border-radius: 16px;
+  background: radial-gradient(circle at top left, #d6d1d1, #e9ecef);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: 0.4s ease;
+  cursor: pointer;
+}
+
+/* Hover Effect */
+.stat:hover,
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Animated moving dot */
+.stat::before,
+.feature-card::before {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #007bff;
+  border-radius: 50%;
+  top: 15px;
+  right: 15px;
+  box-shadow: 0 0 12px #007bff;
+  animation: moveDot 6s linear infinite;
+}
+
+/* Animated light ray */
+.stat::after,
+.feature-card::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 40px;
+  background: rgba(142, 143, 215, 0.6);
+  filter: blur(20px);
+  transform: rotate(35deg);
+  top: -20px;
+  left: -50px;
+  animation: shine 4s linear infinite;
+}
+
+/* Dot animation */
+@keyframes moveDot {
+  0%,100% { top: 15px; right: 15px; }
+  25% { top: 15px; right: calc(100% - 25px); }
+  50% { top: calc(100% - 25px); right: calc(100% - 25px); }
+  75% { top: calc(100% - 25px); right: 15px; }
+}
+
+/* Shine animation */
+@keyframes shine {
+  0% { left: -100px; }
+  100% { left: 120%; }
+}
+
+/* ===== TEXT STYLING ===== */
+
+.stat h3 {
+  font-size: 32px;
+  font-weight: bold;
+  color: #0278bc;
+  margin-bottom: 10px;
+}
+
+.stat p {
+  font-size: 14px;
+  color: #555;
+}
+
+.feature-card h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #0278bc;
+}
+
+.feature-card p {
+  font-size: 14px;
+  color: #666;
 }
