@@ -1,0 +1,17 @@
+<p > Audio</p>
+
+
+<div >
+    <button (click) = "startLocalAudio()">Enable Audio Permission</button>
+</div>
+
+
+<div>
+    <button (click)="toogleAudioMute()">Mute/Unmute Audio</button>
+    
+</div>
+
+
+<div>
+    <audio #localAudio autoplay muted></audio>
+</div>
