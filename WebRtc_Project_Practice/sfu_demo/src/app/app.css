@@ -1,0 +1,34 @@
+.grid {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.video-card {
+  position: relative;
+  background: black;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+video {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.label {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mirror{
+    transform: scaleX(-1);
+}

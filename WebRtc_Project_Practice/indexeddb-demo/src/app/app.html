@@ -1,0 +1,48 @@
+<div style="max-width:600px; margin:auto; padding:20px;">
+  <h2>IndexedDB Angular 21 Demo</h2>
+
+  <input 
+    type="text" 
+    [ngModel]="titleInput()"
+(ngModelChange)="titleInput.set($event)"
+ 
+    placeholder="Title"
+    style="width:100%; margin-bottom:10px;"
+  />
+
+  <input 
+    type="text" 
+    [ngModel]="descriptionInput()"
+  (ngModelChange)="descriptionInput.set($event)"
+    placeholder="Description"
+    style="width:100%; margin-bottom:10px;"
+  />
+
+  <button (click)="addOrUpdateTask()">
+    {{ editMode() ? 'Update Task' : 'Add Task' }}
+  </button>
+
+  <button (click)="clearAll()" style="margin-left:10px;">
+    Clear All
+  </button>
+
+  <hr>
+
+  <h3>Stored Tasks</h3>
+
+  <div *ngFor="let task of tasks()"
+
+       style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+    
+    <strong>{{ task.title }}</strong><br>
+    {{ task.description }}<br>
+    <small>{{ task.createdAt }}</small>
+    <br><br>
+
+    <button (click)="editTask(task)">Edit</button>
+    <button (click)="deleteTask(task.id)" style="margin-left:10px;">
+      Delete
+    </button>
+
+  </div>
+</div>

@@ -1,0 +1,25 @@
+.meter {
+  width: 200px;
+  height: 10px;
+  background: #ddd;
+  margin-top: 10px;
+}
+
+.meter-bar {
+  height: 100%;
+  background: green;
+}
+
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.tile {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+}

@@ -1,0 +1,12 @@
+<h2>Shared Worker Demo (Open in Multiple Tabs)</h2>
+
+<input [(ngModel)]="inputMessage" placeholder="Type message..." />
+<button (click)="sendMessage()">Send</button>
+
+<hr>
+
+<h3>Messages:</h3>
+<ul>
+  <li *ngFor="let msg of messages()">{{ msg }}</li>
+
+</ul>

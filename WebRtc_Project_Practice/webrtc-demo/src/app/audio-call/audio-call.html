@@ -1,0 +1,108 @@
+<!-- Notification -->
+<div class="device-notification" *ngIf="showNotification()">
+  {{ notificationMessage() }}
+</div>
+
+<!-- ======================== PRE JOIN ======================== -->
+<ng-container *ngIf="!inCall()">
+  <mat-card class="pre-join-card">
+    <h2>Join Audio Call</h2>
+
+    <audio #localAudio autoplay playsinline></audio>
+
+    <div class="input-group">
+      <input [(ngModel)]="username" placeholder="Your name"  class="input-field" />
+      <input [(ngModel)]="roomName" placeholder="Room name"  class="input-field" />
+    </div>
+
+    <div class="device-select">
+
+      <div class="select-group">
+        <label>🎤 Microphone</label>
+        <select
+          [ngModel]="selectedAudioDevice()"
+          (ngModelChange)="selectedAudioDevice.set($event); changeMicPreJoin()">
+          <option *ngFor="let d of audioDevices()" [value]="d.deviceId">
+            {{ d.label || 'Microphone' }}
+          </option>
+        </select>
+      </div>
+
+      <div class="select-group">
+        <label>🔊 Speaker</label>
+        <select
+          [ngModel]="selectedSpeakerDevice()"
+          (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
+          <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">
+            {{ d.label || 'Speaker' }}
+          </option>
+        </select>
+        <small *ngIf="speakerDevices().length === 0" class="warn-text">
+          ⚠️ Not supported in this browser
+        </small>
+      </div>
+
+    </div>
+
+    <div class="controls">
+      <button mat-icon-button (click)="toggleAudio()">
+        <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
+      </button>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="joinCall()">
+      Join Call
+    </button>
+  </mat-card>
+</ng-container>
+
+<!-- ======================== IN CALL ======================== -->
+<ng-container *ngIf="inCall()">
+  <div class="call-container">
+
+    <audio #localAudio autoplay playsinline></audio>
+
+    <h2>In Audio Call — {{ roomName }}</h2>
+    <p class="participant-info">🎙️ You: {{ username }}</p>
+
+    <!-- Remote participants -->
+    <div *ngFor="let remote of callService.remoteStreams()">
+      <audio [srcObject]="remote.stream" autoplay playsinline></audio>
+      <p class="participant-info">🎙️ {{ remote.participantId }}</p>
+    </div>
+
+    <div class="toolbar">
+
+      <button mat-icon-button (click)="toggleAudio()">
+        <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
+      </button>
+
+      <div class="toolbar-select">
+
+        <!-- MIC in-call -->
+        <select
+          [ngModel]="selectedAudioDevice()"
+          (ngModelChange)="selectedAudioDevice.set($event); changeMicInCall()">
+          <option *ngFor="let d of audioDevices()" [value]="d.deviceId">
+            {{ d.label || 'Mic' }}
+          </option>
+        </select>
+
+        <!-- SPEAKER -->
+        <select
+          [ngModel]="selectedSpeakerDevice()"
+          (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
+          <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">
+            {{ d.label || 'Speaker' }}
+          </option>
+        </select>
+
+      </div>
+
+      <button mat-icon-button color="warn" (click)="leaveCall()">
+        <mat-icon>call_end</mat-icon>
+      </button>
+
+    </div>
+  </div>
+</ng-container>

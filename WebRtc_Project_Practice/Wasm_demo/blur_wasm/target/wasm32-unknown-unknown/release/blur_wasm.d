@@ -1,0 +1,1 @@
+C:\Users\onlya\Desktop\Inventyv\ Training\Training_Task\WebRtc_Project_Practice\Wasm_demo\blur_wasm\target\wasm32-unknown-unknown\release\blur_wasm.wasm: C:\Users\onlya\Desktop\Inventyv\ Training\Training_Task\WebRtc_Project_Practice\Wasm_demo\blur_wasm\src\lib.rs

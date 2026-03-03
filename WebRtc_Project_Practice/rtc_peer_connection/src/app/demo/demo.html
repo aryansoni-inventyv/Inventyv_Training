@@ -1,0 +1,15 @@
+<div>
+  <button (click)="startCall()">Start Call</button>
+  <button (click)="hangUp()">Hang Up</button>
+</div>
+
+<h3>Call State: {{ callState() }}</h3>
+
+
+<h3>Local Video</h3>
+<video class="mirror" #localVideo autoplay playsinline muted></video>
+<button  (click)="toogleVideo()">Stop/pause</button> 
+<button  (click)="toogleAudio()">Mute/UnMute</button> 
+
+<h3>Remote Video</h3>
+<video class="mirror" #remoteVideo autoplay playsinline></video>

@@ -6,12 +6,26 @@
 </div>
 
 
-<div>
-    <button (click)="toogleAudioMute()">Mute/Unmute Audio</button>
-    
-</div>
+<button (click)="toogleAudioMute()">
+  {{ isMuted() ? 'Unmute' : 'Mute' }}
+</button>
+
+<button (click)="toogleVideoMute()">
+  {{ isVideoEnabled() ? 'stop' : 'start' }}
+</button>
+
+
+<button (click)= "changetoBackCamera()">Back Camera</button>
+<button (click)= "changetoFrontCamera()">Front Camera</button>
 
 
 <div>
     <audio #localAudio autoplay muted></audio>
 </div>
+
+
+
+
+    <div>
+        <video class="mirror" #video autoplay playsinline muted></video>
+    </div>

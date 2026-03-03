@@ -1,0 +1,22 @@
+<video #localVideo autoplay muted playsinline></video>
+
+<button (click)="mute()" >Mute</button>
+<button (click)="unmute()" >Unmute</button>
+.
+<button (click)="cameraOff()" >Camera Off</button>
+<button (click)="cameraOn()" >Camera On</button>
+
+
+<div class="meter">
+  <div class="meter-bar" [style.width.%]="audioLevel"></div>
+</div>
+
+
+<div class="grid">
+  <div class="tile" *ngFor="let p of fakeSfu.participants | async">
+    <div class="name">{{p.userId}}</div>
+    <div>Status:</div>
+    <div>🎤 {{p.audioPaused ? 'Muted' : 'Speaking'}}</div>
+    <div>📷 {{p.videoPaused ? 'Camera Off' : 'Camera On'}}</div>
+  </div>
+</div>

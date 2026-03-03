@@ -1,0 +1,47 @@
+<!-- PREVIEW SCREEN -->
+<div *ngIf="isPreview">
+  <video autoplay playsinline [srcObject]="localStream"></video>
+
+  <div>
+    <button (click)="toggleMic()">
+      {{ isMicEnabled ? 'Mute Mic' : 'Unmute Mic' }}
+    </button>
+
+    <button (click)="toggleVideo()">
+      {{ isVideoEnabled ? 'Turn Off Video' : 'Turn On Video' }}
+    </button>
+
+    <button (click)="joinMeeting()">Join Meeting</button>
+  </div>
+</div>
+<!-- PREVIEW OR MEETING VIDEO GRID -->
+<div class="grid">
+  <div *ngFor="let p of participants | keyvalue" class="video-card">
+    <video class="mirror" autoplay playsinline [srcObject]="p.value"></video>
+    <div class="label">
+      {{ p.key }}
+      <button (click)="removeUser(p.key)">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROLS BAR (VISIBLE ALWAYS AFTER PERMISSION) -->
+<div class="controls" *ngIf="localStream">
+
+  <button (click)="toggleMic()">
+    {{ isMicEnabled ? 'Mute Mic' : 'Unmute Mic' }}
+  </button>
+
+  <button (click)="toggleVideo()">
+    {{ isVideoEnabled ? 'Turn Off Video' : 'Turn On Video' }}
+  </button>
+
+  <button *ngIf="isPreview" (click)="joinMeeting()">
+    Join Meeting
+  </button>
+
+  <button *ngIf="isJoined" (click)="addFakeUserWithRTC()">
+    Add RTC User
+  </button>
+
+</div>

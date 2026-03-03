@@ -1,0 +1,12 @@
+<h2>WASM Video Blur Demo</h2>
+
+<button (click)="enableBlur()">Blur Background</button>
+<button (click)="disableBlur()">Normal</button>
+
+<br><br>
+
+<!-- Hidden original video -->
+<video #videoElement autoplay playsinline style="display:none;"></video>
+
+<!-- Visible canvas -->
+<canvas #canvasElement></canvas>
