@@ -33,17 +33,17 @@ export class AudioCallComponent implements AfterViewInit {
 
   @ViewChild('localAudio') localAudio!: ElementRef<HTMLAudioElement>;
 
-  isAudioEnabled        = signal(true);
-  inCall                = signal(false);
+  isAudioEnabled = signal(true);
+  inCall = signal(false);
 
-  audioDevices          = signal<MediaDeviceInfo[]>([]);
-  speakerDevices        = signal<MediaDeviceInfo[]>([]);
+  audioDevices = signal<MediaDeviceInfo[]>([]);
+  speakerDevices = signal<MediaDeviceInfo[]>([]);
 
-  selectedAudioDevice   = signal<string>('');
+  selectedAudioDevice = signal<string>('');
   selectedSpeakerDevice = signal<string>('');
 
-  notificationMessage   = signal('');
-  showNotification      = signal(false);
+  notificationMessage = signal('');
+  showNotification = signal(false);
 
   roomName = 'my-room';
   username = '';
@@ -51,7 +51,7 @@ export class AudioCallComponent implements AfterViewInit {
   constructor(
     public callService: CallService,
     private router: Router
-  ) {}
+  ) { }
 
   /* ================= INIT ================= */
 
@@ -59,18 +59,46 @@ export class AudioCallComponent implements AfterViewInit {
     await this.loadDevices();
     await this.initPreviewStream();
 
+    const saved = this.callService.getSavedSession();
+    if (saved && saved.mode === 'audio') {
+      console.log('🔄 Restoring previous audio session...');
+      this.username = saved.username;
+      this.roomName = saved.roomName;
+
+      this.selectedAudioDevice.set(saved.audioDeviceId || '');
+      this.selectedSpeakerDevice.set(saved.speakerDeviceId || '');
+      this.isAudioEnabled.set(saved.micEnabled);
+
+      await this.joinCall(true);
+    }
+
     navigator.mediaDevices.ondevicechange = async () => {
       await this.loadDevices();
       this.notify('Audio devices updated');
     };
   }
 
+  private updateSessionState() {
+    if (!this.inCall()) return;
+
+    this.callService.saveCallSession({
+      roomName: this.roomName,
+      username: this.username,
+      mode: 'audio',
+      micEnabled: this.isAudioEnabled(),
+      audioDeviceId: this.selectedAudioDevice(),
+      speakerDeviceId: this.selectedSpeakerDevice()
+    });
+  }
+
+
+
   /* ================= LOAD DEVICES ================= */
 
   async loadDevices() {
     const devices = await this.callService.loadDevices();
 
-    const mics     = devices.filter(d => d.kind === 'audioinput');
+    const mics = devices.filter(d => d.kind === 'audioinput');
     const speakers = devices.filter(d => d.kind === 'audiooutput');
 
     this.audioDevices.set(mics);
@@ -135,6 +163,8 @@ export class AudioCallComponent implements AfterViewInit {
     await this.callService.switchAudioDeviceInCall(this.selectedAudioDevice());
     const d = this.audioDevices().find(d => d.deviceId === this.selectedAudioDevice());
     this.notify(`Mic → ${d?.label || 'Unknown'}`);
+    this.updateSessionState();
+
   }
 
   /* ================= SWITCH SPEAKER ================= */
@@ -151,6 +181,8 @@ export class AudioCallComponent implements AfterViewInit {
 
     const d = this.speakerDevices().find(d => d.deviceId === deviceId);
     this.notify(`Speaker → ${d?.label || 'Unknown'}`);
+    this.updateSessionState();
+
   }
 
   /* ================= NOTIFICATION ================= */
@@ -171,13 +203,37 @@ export class AudioCallComponent implements AfterViewInit {
     } else {
       this.callService.localStream?.getAudioTracks().forEach(t => t.enabled = enabled);
     }
+    this.updateSessionState();
+
+  }
+
+
+  // ─── Add this method to your video-call component class ───────────────────────
+  // It returns the CSS class applied to .video-grid based on participant count.
+
+  getGridClass(total: number): string {
+    if (total <= 6) return `grid-${total}`;
+    return 'grid-6plus';
+  }
+
+  // ─── Also add this if you use the shouldSpanLocal helper ──────────────────────
+  // (only needed if you kept that binding — you can remove it from the HTML)
+  shouldSpanLocal(total: number): boolean {
+    return total === 3;
+  }
+  getCols(total: number): number {
+    if (total <= 1) return 1;
+    if (total <= 2) return 2;
+    if (total <= 4) return 2;
+    if (total <= 9) return 3;
+    return 4;
   }
 
   /* ================= JOIN / LEAVE ================= */
 
-  async joinCall() {
+  async joinCall(isReconnect = false) {
     if (!this.username.trim()) {
-      this.notify('Please enter your name!');
+      if (!isReconnect) this.notify('Please enter your name!');
       return;
     }
 
@@ -187,17 +243,33 @@ export class AudioCallComponent implements AfterViewInit {
 
     this.inCall.set(true);
 
+    // 🔥 SAVE SESSION
+    this.callService.saveCallSession({
+      roomName: this.roomName,
+      username: this.username,
+      mode: 'audio',
+      micEnabled: this.isAudioEnabled(),
+      audioDeviceId: this.selectedAudioDevice(),
+      speakerDeviceId: this.selectedSpeakerDevice()
+    });
+
     setTimeout(async () => {
       this.attachStream();
+
+      await this.callService.toggleAudio(this.isAudioEnabled());
+
       if (this.selectedSpeakerDevice()) {
         await this.callService.switchSpeakerDevice(this.selectedSpeakerDevice());
       }
     }, 300);
   }
 
+
   async leaveCall() {
     await this.callService.leaveRoom();
+    this.callService.clearCallSession(); // 🔥 clear session
     this.inCall.set(false);
     this.router.navigate(['/']);
   }
+
 }

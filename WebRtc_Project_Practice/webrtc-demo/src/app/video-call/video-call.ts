@@ -32,23 +32,23 @@ import { Track } from 'livekit-client';
 })
 export class VideoCallComponent implements AfterViewInit {
 
-  @ViewChild('preview')    previewVideo!: ElementRef<HTMLVideoElement>;
-  @ViewChild('localVideo') localVideo!:   ElementRef<HTMLVideoElement>;
+  @ViewChild('preview') previewVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
 
-  isAudioEnabled        = signal(true);
-  isVideoEnabled        = signal(true);
-  inCall                = signal(false);
+  isAudioEnabled = signal(true);
+  isVideoEnabled = signal(true);
+  inCall = signal(false);
 
-  audioDevices          = signal<MediaDeviceInfo[]>([]);
-  videoDevices          = signal<MediaDeviceInfo[]>([]);
-  speakerDevices        = signal<MediaDeviceInfo[]>([]);
+  audioDevices = signal<MediaDeviceInfo[]>([]);
+  videoDevices = signal<MediaDeviceInfo[]>([]);
+  speakerDevices = signal<MediaDeviceInfo[]>([]);
 
-  selectedAudioDevice   = signal<string>('');
-  selectedVideoDevice   = signal<string>('');
+  selectedAudioDevice = signal<string>('');
+  selectedVideoDevice = signal<string>('');
   selectedSpeakerDevice = signal<string>('');
 
-  notificationMessage   = signal('');
-  showNotification      = signal(false);
+  notificationMessage = signal('');
+  showNotification = signal(false);
 
   roomName = 'my-room';
   username = '';
@@ -56,7 +56,7 @@ export class VideoCallComponent implements AfterViewInit {
   constructor(
     public callService: CallService,
     private router: Router
-  ) {}
+  ) { }
 
   /* ================= INIT ================= */
 
@@ -64,11 +64,30 @@ export class VideoCallComponent implements AfterViewInit {
     await this.loadDevices();
     await this.initPreviewStream();
 
+    // 🔥 AUTO RECONNECT AFTER REFRESH
+    const saved = this.callService.getSavedSession();
+    if (saved && saved.mode === 'video') {
+      console.log('🔄 Restoring previous video session...');
+      this.username = saved.username;
+      this.roomName = saved.roomName;
+
+      this.selectedAudioDevice.set(saved.audioDeviceId || '');
+      this.selectedVideoDevice.set(saved.videoDeviceId || '');
+      this.selectedSpeakerDevice.set(saved.speakerDeviceId || '');
+
+      this.isAudioEnabled.set(saved.micEnabled);
+      this.isVideoEnabled.set(saved.videoEnabled ?? true);
+
+      await this.joinCall(true); // silent reconnect
+    }
+
     navigator.mediaDevices.ondevicechange = async () => {
       await this.loadDevices();
       this.notify('Devices updated');
     };
   }
+
+
 
   /* ================= LOAD DEVICES ================= */
 
@@ -168,6 +187,9 @@ export class VideoCallComponent implements AfterViewInit {
       console.error('In-call mic switch failed:', e);
       this.notify('❌ Mic switch failed');
     }
+
+    this.updateSessionState();
+
   }
 
   async changeCameraInCall() {
@@ -197,6 +219,9 @@ export class VideoCallComponent implements AfterViewInit {
       console.error('In-call camera switch failed:', e);
       this.notify('❌ Camera switch failed');
     }
+
+    this.updateSessionState();
+
   }
 
   /* ================= SPEAKER ================= */
@@ -213,6 +238,8 @@ export class VideoCallComponent implements AfterViewInit {
       console.error('Speaker switch failed:', e);
       this.notify('❌ Speaker switch failed');
     }
+    this.updateSessionState();
+
   }
 
   /* ================= NOTIFICATION ================= */
@@ -228,76 +255,131 @@ export class VideoCallComponent implements AfterViewInit {
   async toggleAudio() {
     const enabled = !this.isAudioEnabled();
     this.isAudioEnabled.set(enabled);
+
     if (this.inCall()) {
       await this.callService.toggleAudio(enabled);
+      this.updateSessionState(); // ✅ SAVE UPDATED STATE
     } else {
       this.callService.localStream?.getAudioTracks().forEach(t => t.enabled = enabled);
     }
   }
+  // ─── Add this method to your video-call component class ───────────────────────
+  // It returns the CSS class applied to .video-grid based on participant count.
+
+  getGridClass(total: number): string {
+    if (total <= 6) return `grid-${total}`;
+    return 'grid-6plus';
+  }
+
+  // ─── Also add this if you use the shouldSpanLocal helper ──────────────────────
+  // (only needed if you kept that binding — you can remove it from the HTML)
+  shouldSpanLocal(total: number): boolean {
+    return total === 3;
+  }
+
+  getCols(total: number): number {
+    if (total <= 1) return 1;
+    if (total <= 2) return 2;
+    if (total <= 4) return 2;
+    if (total <= 9) return 3;
+    return 4;
+  }
+
 
   async toggleVideo() {
     const enabled = !this.isVideoEnabled();
     this.isVideoEnabled.set(enabled);
+
     if (this.inCall()) {
       await this.callService.toggleVideo(enabled);
+      this.updateSessionState(); // ✅ SAVE UPDATED STATE
     } else {
       this.callService.localStream?.getVideoTracks().forEach(t => t.enabled = enabled);
     }
   }
 
+
   /* ================= JOIN / LEAVE ================= */
 
-  async joinCall() {
-  if (!this.username.trim()) {
-    this.notify('⚠️ Please enter your name!');
-    return;
-  }
-
-  this.notify('Connecting...');
-
-  // ✅ Stop preview stream and clear video element BEFORE joinRoom
-  // so the OS releases mic/camera before LiveKit tries to grab them
-  this.callService.localStream?.getTracks().forEach(t => t.stop());
-  if (this.previewVideo?.nativeElement) {
-    this.previewVideo.nativeElement.srcObject = null;
-  }
-
-  // Small delay to let OS release devices
-  await new Promise(resolve => setTimeout(resolve, 300));
-
-  try {
-    await this.callService.joinRoom(this.roomName, this.username, 'video');
-  } catch (e) {
-    console.error('Join room failed:', e);
-    this.notify('❌ Failed to connect');
-    return;
-  }
-
-  this.inCall.set(true);
-
-  setTimeout(async () => {
-    const pub = this.callService.room.localParticipant
-      .getTrackPublication(Track.Source.Camera);
-
-    const track = pub?.track;
-    const el = this.localVideo?.nativeElement;
-
-    if (track && el) {
-      track.attach(el);
-      console.log('✅ Local video attached');
-    } else {
-      console.warn('⚠️ Local video attach failed', { track: !!track, el: !!el });
+  async joinCall(isReconnect = false) {
+    if (!this.username.trim()) {
+      if (!isReconnect) this.notify('⚠️ Please enter your name!');
+      return;
     }
 
-    if (this.selectedSpeakerDevice()) {
-      await this.callService.switchSpeakerDevice(this.selectedSpeakerDevice());
+    if (!isReconnect) this.notify('Connecting...');
+
+    this.callService.localStream?.getTracks().forEach(t => t.stop());
+    if (this.previewVideo?.nativeElement) {
+      this.previewVideo.nativeElement.srcObject = null;
     }
-  }, 600);
-}
+
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    try {
+      await this.callService.joinRoom(this.roomName, this.username, 'video');
+    } catch (e) {
+      console.error('Join room failed:', e);
+      if (!isReconnect) this.notify('❌ Failed to connect');
+      return;
+    }
+
+    this.inCall.set(true);
+
+    // 🔥 SAVE SESSION
+    this.callService.saveCallSession({
+      roomName: this.roomName,
+      username: this.username,
+      mode: 'video',
+      micEnabled: this.isAudioEnabled(),
+      videoEnabled: this.isVideoEnabled(),
+      audioDeviceId: this.selectedAudioDevice(),
+      videoDeviceId: this.selectedVideoDevice(),
+      speakerDeviceId: this.selectedSpeakerDevice()
+    });
+
+    setTimeout(async () => {
+      const pub = this.callService.room.localParticipant
+        .getTrackPublication(Track.Source.Camera);
+
+      const track = pub?.track;
+      const el = this.localVideo?.nativeElement;
+
+      if (track && el) {
+        track.attach(el);
+      }
+
+      await this.callService.toggleAudio(this.isAudioEnabled());
+      await this.callService.toggleVideo(this.isVideoEnabled());
+
+      if (this.selectedSpeakerDevice()) {
+        await this.callService.switchSpeakerDevice(this.selectedSpeakerDevice());
+      }
+    }, 600);
+  }
+
+  private updateSessionState() {
+    if (!this.inCall()) return;
+
+    this.callService.saveCallSession({
+      roomName: this.roomName,
+      username: this.username,
+      mode: 'video',
+      micEnabled: this.isAudioEnabled(),
+      videoEnabled: this.isVideoEnabled(),
+      audioDeviceId: this.selectedAudioDevice(),
+      videoDeviceId: this.selectedVideoDevice(),
+      speakerDeviceId: this.selectedSpeakerDevice()
+    });
+  }
+
+
 
   async leaveCall() {
     await this.callService.leaveRoom();
+    this.callService.clearCallSession(); // 🔥 clear session
     this.inCall.set(false);
     this.router.navigate(['/']);
   }
+
 }

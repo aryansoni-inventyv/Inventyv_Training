@@ -1,108 +1,199 @@
-<!-- Notification -->
+<!-- ================= GLOBAL NOTIFICATION ================= -->
 <div class="device-notification" *ngIf="showNotification()">
+  <span class="notif-icon">🔔</span>
   {{ notificationMessage() }}
+</div>
+
+<!-- ================= RECONNECT OVERLAY ================= -->
+<div class="reconnect-overlay"
+     *ngIf="inCall() &&
+            (callService.connectionState() === 'reconnecting' ||
+             callService.connectionState() === 'connecting')">
+  <div class="reconnect-box">
+    <div class="spinner"></div>
+    <h3>Reconnecting…</h3>
+    <p>Your connection is unstable. Hang tight.</p>
+  </div>
 </div>
 
 <!-- ======================== PRE JOIN ======================== -->
 <ng-container *ngIf="!inCall()">
-  <mat-card class="pre-join-card">
-    <h2>Join Audio Call</h2>
+  <div class="prejoin-bg">
+    <div class="prejoin-card">
 
-    <audio #localAudio autoplay playsinline></audio>
-
-    <div class="input-group">
-      <input [(ngModel)]="username" placeholder="Your name"  class="input-field" />
-      <input [(ngModel)]="roomName" placeholder="Room name"  class="input-field" />
-    </div>
-
-    <div class="device-select">
-
-      <div class="select-group">
-        <label>🎤 Microphone</label>
-        <select
-          [ngModel]="selectedAudioDevice()"
-          (ngModelChange)="selectedAudioDevice.set($event); changeMicPreJoin()">
-          <option *ngFor="let d of audioDevices()" [value]="d.deviceId">
-            {{ d.label || 'Microphone' }}
-          </option>
-        </select>
+      <div class="brand-mark">
+        <span class="brand-dot"></span>
+        <span class="brand-name">AudioRoom</span>
       </div>
 
-      <div class="select-group">
-        <label>🔊 Speaker</label>
-        <select
-          [ngModel]="selectedSpeakerDevice()"
-          (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
-          <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">
-            {{ d.label || 'Speaker' }}
-          </option>
-        </select>
-        <small *ngIf="speakerDevices().length === 0" class="warn-text">
-          ⚠️ Not supported in this browser
-        </small>
+      <div class="mic-illustration">
+        <div class="mic-ring ring3"></div>
+        <div class="mic-ring ring2"></div>
+        <div class="mic-ring ring1"></div>
+        <div class="mic-core">
+          <mat-icon>mic</mat-icon>
+        </div>
       </div>
 
-    </div>
+      <h1>Join Audio Call</h1>
+      <p class="sub">Enter a room and start talking instantly.</p>
 
-    <div class="controls">
-      <button mat-icon-button (click)="toggleAudio()">
-        <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
+      <audio #localAudio autoplay playsinline></audio>
+
+      <div class="field-group">
+        <label>Your name</label>
+        <input [(ngModel)]="username" placeholder="e.g. Alex Kim" class="field"
+               [disabled]="callService.connectionState() === 'connecting'" />
+      </div>
+
+      <div class="field-group">
+        <label>Room name</label>
+        <input [(ngModel)]="roomName" placeholder="e.g. design-sync" class="field"
+               [disabled]="callService.connectionState() === 'connecting'" />
+      </div>
+
+      <div class="devices-grid">
+        <div class="device-row">
+          <span class="device-icon">🎤</span>
+          <div class="device-info">
+            <label>Microphone</label>
+            <select [disabled]="callService.connectionState() === 'connecting'"
+                    [ngModel]="selectedAudioDevice()"
+                    (ngModelChange)="selectedAudioDevice.set($event); changeMicPreJoin()">
+              <option *ngFor="let d of audioDevices()" [value]="d.deviceId">{{ d.label || 'Microphone' }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="device-row">
+          <span class="device-icon">🔊</span>
+          <div class="device-info">
+            <label>Speaker</label>
+            <select [disabled]="callService.connectionState() === 'connecting'"
+                    [ngModel]="selectedSpeakerDevice()"
+                    (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
+              <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">{{ d.label || 'Speaker' }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <button class="toggle-btn" [class.off]="!isAudioEnabled()"
+                [disabled]="callService.connectionState() === 'connecting'"
+                (click)="toggleAudio()">
+          <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
+        </button>
+        <span class="toggle-hint">{{ isAudioEnabled() ? 'Mic on' : 'Mic muted' }}</span>
+      </div>
+
+      <button class="join-btn"
+              [disabled]="callService.connectionState() === 'connecting'"
+              (click)="joinCall()">
+        <span *ngIf="callService.connectionState() !== 'connecting'">Join Call</span>
+        <span *ngIf="callService.connectionState() === 'connecting'" class="joining-text">
+          <span class="dot-spin"></span> Joining…
+        </span>
       </button>
-    </div>
 
-    <button mat-raised-button color="primary" (click)="joinCall()">
-      Join Call
-    </button>
-  </mat-card>
+    </div>
+  </div>
 </ng-container>
 
 <!-- ======================== IN CALL ======================== -->
 <ng-container *ngIf="inCall()">
-  <div class="call-container">
+  <div class="call-stage">
 
     <audio #localAudio autoplay playsinline></audio>
 
-    <h2>In Audio Call — {{ roomName }}</h2>
-    <p class="participant-info">🎙️ You: {{ username }}</p>
-
-    <!-- Remote participants -->
-    <div *ngFor="let remote of callService.remoteStreams()">
-      <audio [srcObject]="remote.stream" autoplay playsinline></audio>
-      <p class="participant-info">🎙️ {{ remote.participantId }}</p>
+    <!-- ── Fixed header ── -->
+    <div class="call-header">
+      <div class="room-info">
+        <span class="room-dot"></span>
+        <span class="room-name">{{ roomName }}</span>
+        <span class="participant-count">
+          {{ callService.remoteStreams().length + 1 }}
+          participant{{ callService.remoteStreams().length === 0 ? '' : 's' }}
+        </span>
+      </div>
+      <div class="call-live-badge">
+        <mat-icon>fiber_manual_record</mat-icon>
+        Live
+      </div>
     </div>
 
-    <div class="toolbar">
+    <!-- ── Avatar grid body ── -->
+    <div class="call-body">
+      <div class="participant-grid"
+           [style.--cols]="getCols(callService.remoteStreams().length + 1)">
 
-      <button mat-icon-button (click)="toggleAudio()">
-        <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
-      </button>
+        <!-- Local tile -->
+        <div class="participant-tile">
+          <div class="avatar" [class.speaking]="isAudioEnabled()">
+            <span>{{ username | slice:0:1 | uppercase }}</span>
+          </div>
+          <div class="participant-name">
+            <mat-icon class="p-mic-icon" [class.muted]="!isAudioEnabled()">
+              {{ isAudioEnabled() ? 'mic' : 'mic_off' }}
+            </mat-icon>
+            <span class="name-text">You ({{ username }})</span>
+          </div>
+        </div>
 
-      <div class="toolbar-select">
+        <!-- Remote tiles -->
+        <div class="participant-tile" *ngFor="let remote of callService.remoteStreams()">
+          <audio [srcObject]="remote.stream" autoplay playsinline></audio>
+          <div class="avatar">
+            <span>{{ remote.participantId | slice:0:1 | uppercase }}</span>
+          </div>
+          <div class="participant-name">
+            <mat-icon class="p-mic-icon">mic</mat-icon>
+            <span class="name-text">{{ remote.participantId }}</span>
+          </div>
+        </div>
 
-        <!-- MIC in-call -->
-        <select
-          [ngModel]="selectedAudioDevice()"
-          (ngModelChange)="selectedAudioDevice.set($event); changeMicInCall()">
-          <option *ngFor="let d of audioDevices()" [value]="d.deviceId">
-            {{ d.label || 'Mic' }}
-          </option>
-        </select>
+      </div>
+    </div>
 
-        <!-- SPEAKER -->
-        <select
-          [ngModel]="selectedSpeakerDevice()"
-          (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
-          <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">
-            {{ d.label || 'Speaker' }}
-          </option>
-        </select>
+    <!-- ── Fixed control bar ── -->
+    <div class="control-bar">
+      <div class="control-group">
+
+        <div class="ctrl-wrap">
+          <button class="ctrl-btn" [class.ctrl-off]="!isAudioEnabled()"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  (click)="toggleAudio()">
+            <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
+          </button>
+          <select class="ctrl-select"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  [ngModel]="selectedAudioDevice()"
+                  (ngModelChange)="selectedAudioDevice.set($event); changeMicInCall()">
+            <option *ngFor="let d of audioDevices()" [value]="d.deviceId">{{ d.label || 'Mic' }}</option>
+          </select>
+        </div>
+
+        <div class="ctrl-wrap">
+          <button class="ctrl-btn"
+                  [disabled]="callService.connectionState() === 'reconnecting'">
+            <mat-icon>volume_up</mat-icon>
+          </button>
+          <select class="ctrl-select"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  [ngModel]="selectedSpeakerDevice()"
+                  (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
+            <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">{{ d.label || 'Speaker' }}</option>
+          </select>
+        </div>
 
       </div>
 
-      <button mat-icon-button color="warn" (click)="leaveCall()">
+      <button class="leave-btn"
+              [disabled]="callService.connectionState() === 'reconnecting'"
+              (click)="leaveCall()">
         <mat-icon>call_end</mat-icon>
+        Leave
       </button>
-
     </div>
+
   </div>
 </ng-container>

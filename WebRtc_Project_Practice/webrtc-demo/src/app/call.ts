@@ -16,12 +16,14 @@ export class CallService {
   localStream!: MediaStream;
   room!: Room;
   remoteStreams = signal<{ stream: MediaStream; participantId: string }[]>([]);
+  connectionState = signal<ConnectionState | null>(null);
+
 
   private currentSpeakerDeviceId = '';
 
   async getToken(roomName: string, username: string): Promise<string> {
     const res = await fetch(
-      `http://192.168.10.33:3000/token?room=${encodeURIComponent(roomName)}&username=${encodeURIComponent(username)}`
+      `http://192.168.10.24:3000/token?room=${encodeURIComponent(roomName)}&username=${encodeURIComponent(username)}`
     );
     const data = await res.json();
     return data.token;
@@ -92,6 +94,24 @@ export class CallService {
       }
     });
 
+    this.room.on(RoomEvent.ConnectionStateChanged, (state) => {
+      console.log('🔄 Connection state:', state);
+      this.connectionState.set(state);
+    });
+
+    this.room.on(RoomEvent.Reconnecting, () => {
+      console.log('⚠️ Reconnecting...');
+      this.connectionState.set(ConnectionState.Reconnecting);
+    });
+
+    this.room.on(RoomEvent.Reconnected, () => {
+      console.log('✅ Reconnected');
+      this.connectionState.set(ConnectionState.Connected);
+    });
+
+
+
+
     this.room.on(RoomEvent.TrackUnsubscribed, (
       track: RemoteTrack,
       _pub: RemoteTrackPublication,
@@ -127,7 +147,7 @@ export class CallService {
       this.remoteStreams.set([]);
     });
 
-    await this.room.connect('ws://192.168.10.33:7880', token);
+    await this.room.connect('ws://192.168.10.24:7880', token);
     console.log('✅ Connected to LiveKit room:', roomName);
 
     // ✅ Stop ALL preview tracks BEFORE createLocalTracks
@@ -271,4 +291,29 @@ export class CallService {
   async loadDevices(): Promise<MediaDeviceInfo[]> {
     return navigator.mediaDevices.enumerateDevices();
   }
+
+  /* ================= SESSION STORAGE ================= */
+
+  saveCallSession(data: {
+    roomName: string;
+    username: string;
+    mode: 'audio' | 'video';
+    micEnabled: boolean;
+    videoEnabled?: boolean;
+    audioDeviceId?: string;
+    videoDeviceId?: string;
+    speakerDeviceId?: string;
+  }) {
+    sessionStorage.setItem('activeCall', JSON.stringify(data));
+  }
+
+  getSavedSession() {
+    const raw = sessionStorage.getItem('activeCall');
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  clearCallSession() {
+    sessionStorage.removeItem('activeCall');
+  }
+
 }

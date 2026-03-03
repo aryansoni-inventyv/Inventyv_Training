@@ -1,135 +1,244 @@
-<!-- Notification -->
+<!-- ================= GLOBAL NOTIFICATION ================= -->
 <div class="device-notification" *ngIf="showNotification()">
+  <span class="notif-icon">🔔</span>
   {{ notificationMessage() }}
+</div>
+
+<!-- ================= RECONNECT OVERLAY ================= -->
+<div class="reconnect-overlay"
+     *ngIf="inCall() &&
+            (callService.connectionState() === 'reconnecting' ||
+             callService.connectionState() === 'connecting')">
+  <div class="reconnect-box">
+    <div class="spinner"></div>
+    <h3>Reconnecting…</h3>
+    <p>Your connection is unstable. Hang tight.</p>
+  </div>
 </div>
 
 <!-- ======================== PRE JOIN ======================== -->
 <ng-container *ngIf="!inCall()">
-  <mat-card class="pre-join-card">
-    <h2>Join Video Call</h2>
+  <div class="prejoin-bg">
+    <div class="prejoin-layout">
 
-    <video #preview autoplay muted playsinline></video>
-
-    <div class="input-group">
-      <input [(ngModel)]="username" placeholder="Your name"  class="input-field" />
-      <input [(ngModel)]="roomName" placeholder="Room name"  class="input-field" />
-    </div>
-
-    <div class="device-select">
-
-      <div class="select-group">
-        <label>🎤 Microphone</label>
-        <select
-          [ngModel]="selectedAudioDevice()"
-          (ngModelChange)="selectedAudioDevice.set($event); changeMicPreJoin()">
-          <option *ngFor="let d of audioDevices()" [value]="d.deviceId">
-            {{ d.label || 'Microphone' }}
-          </option>
-        </select>
+      <div class="preview-panel">
+        <div class="preview-wrap">
+          <video #preview autoplay muted playsinline class="no-mirror"></video>
+          <div class="preview-overlay">
+            <span class="preview-label">Preview</span>
+          </div>
+        </div>
       </div>
 
-      <div class="select-group">
-        <label>📷 Camera</label>
-        <select
-          [ngModel]="selectedVideoDevice()"
-          (ngModelChange)="selectedVideoDevice.set($event); changeCameraPreJoin()">
-          <option *ngFor="let d of videoDevices()" [value]="d.deviceId">
-            {{ d.label || 'Camera' }}
-          </option>
-        </select>
-      </div>
+      <div class="prejoin-form">
+        <div class="brand-mark">
+          <span class="brand-dot"></span>
+          <span class="brand-name">VideoRoom</span>
+        </div>
 
-      <div class="select-group">
-        <label>🔊 Speaker</label>
-        <select
-          [ngModel]="selectedSpeakerDevice()"
-          (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
-          <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">
-            {{ d.label || 'Speaker' }}
-          </option>
-        </select>
-        <small *ngIf="speakerDevices().length === 0" class="warn-text">
-          ⚠️ Not supported in this browser
-        </small>
+        <h1>Ready to join?</h1>
+        <p class="sub">Set up your audio and video before entering.</p>
+
+        <div class="field-group">
+          <label>Your name</label>
+          <input [(ngModel)]="username" placeholder="e.g. Alex Kim" class="field"
+                 [disabled]="callService.connectionState() === 'connecting'" />
+        </div>
+
+        <div class="field-group">
+          <label>Room name</label>
+          <input [(ngModel)]="roomName" placeholder="e.g. design-sync" class="field"
+                 [disabled]="callService.connectionState() === 'connecting'" />
+        </div>
+
+        <div class="devices-grid">
+          <div class="device-row">
+            <span class="device-icon">🎤</span>
+            <div class="device-info">
+              <label>Microphone</label>
+              <select [disabled]="callService.connectionState() === 'connecting'"
+                      [ngModel]="selectedAudioDevice()"
+                      (ngModelChange)="selectedAudioDevice.set($event); changeMicPreJoin()">
+                <option *ngFor="let d of audioDevices()" [value]="d.deviceId">{{ d.label || 'Microphone' }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="device-row">
+            <span class="device-icon">📷</span>
+            <div class="device-info">
+              <label>Camera</label>
+              <select [disabled]="callService.connectionState() === 'connecting'"
+                      [ngModel]="selectedVideoDevice()"
+                      (ngModelChange)="selectedVideoDevice.set($event); changeCameraPreJoin()">
+                <option *ngFor="let d of videoDevices()" [value]="d.deviceId">{{ d.label || 'Camera' }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="device-row">
+            <span class="device-icon">🔊</span>
+            <div class="device-info">
+              <label>Speaker</label>
+              <select [disabled]="callService.connectionState() === 'connecting'"
+                      [ngModel]="selectedSpeakerDevice()"
+                      (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
+                <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">{{ d.label || 'Speaker' }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <button class="toggle-btn" [class.off]="!isAudioEnabled()"
+                  [disabled]="callService.connectionState() === 'connecting'"
+                  (click)="toggleAudio()">
+            <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
+          </button>
+          <button class="toggle-btn" [class.off]="!isVideoEnabled()"
+                  [disabled]="callService.connectionState() === 'connecting'"
+                  (click)="toggleVideo()">
+            <mat-icon>{{ isVideoEnabled() ? 'videocam' : 'videocam_off' }}</mat-icon>
+          </button>
+          <span class="toggle-hint">
+            {{ isAudioEnabled() ? 'Mic on' : 'Mic off' }} ·
+            {{ isVideoEnabled() ? 'Cam on' : 'Cam off' }}
+          </span>
+        </div>
+
+        <button class="join-btn"
+                [disabled]="callService.connectionState() === 'connecting'"
+                (click)="joinCall()">
+          <span *ngIf="callService.connectionState() !== 'connecting'">Join Now</span>
+          <span *ngIf="callService.connectionState() === 'connecting'" class="joining-text">
+            <span class="dot-spin"></span> Joining…
+          </span>
+        </button>
       </div>
 
     </div>
-
-    <div class="controls">
-      <button mat-icon-button (click)="toggleAudio()">
-        <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
-      </button>
-      <button mat-icon-button (click)="toggleVideo()">
-        <mat-icon>{{ isVideoEnabled() ? 'videocam' : 'videocam_off' }}</mat-icon>
-      </button>
-    </div>
-
-    <button mat-raised-button color="primary" (click)="joinCall()">
-      Join Call
-    </button>
-  </mat-card>
+  </div>
 </ng-container>
 
 <!-- ======================== IN CALL ======================== -->
 <ng-container *ngIf="inCall()">
-  <div class="call-container">
 
-    <div class="video-grid">
+  <!--
+    Three-layer fixed layout:
+      .call-stage          → full viewport column flex
+        .call-header       → fixed height, never scrolls
+        .call-body         → flex:1, overflow:hidden, holds the grid
+          .video-grid      → fills body, CSS grid with equal tiles
+        .control-bar       → fixed height, always visible at bottom
+  -->
+  <div class="call-stage">
 
-      <div class="video-tile local-tile">
-        <video #localVideo autoplay muted playsinline></video>
-        <span class="participant-label">You ({{ username }})</span>
+    <!-- ── Fixed header ── -->
+    <div class="call-header">
+      <div class="room-info">
+        <span class="room-dot"></span>
+        <span class="room-name">{{ roomName }}</span>
+        <span class="participant-count">
+          {{ callService.remoteStreams().length + 1 }}
+          participant{{ callService.remoteStreams().length === 0 ? '' : 's' }}
+        </span>
       </div>
-
-      <div class="video-tile" *ngFor="let remote of callService.remoteStreams()">
-        <video [srcObject]="remote.stream" autoplay playsinline></video>
-        <span class="participant-label">{{ remote.participantId }}</span>
+      <div class="call-live-badge">
+        <mat-icon>fiber_manual_record</mat-icon>
+        Live
       </div>
-
     </div>
 
-    <div class="toolbar">
+    <!-- ── Scrollable video area ── -->
+    <div class="call-body">
+      <!--
+        Grid columns = getCols(total).
+        All tiles use the SAME column span so they are always equal width.
+        Rows are auto-generated with `grid-auto-rows: 1fr` so they fill
+        the available height equally too — every tile identical in size.
+      -->
+      <div class="video-grid"
+           [style.--cols]="getCols(callService.remoteStreams().length + 1)">
 
-      <button mat-icon-button (click)="toggleAudio()">
-        <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
-      </button>
+        <!-- Local tile -->
+        <div class="video-tile">
+          <video #localVideo autoplay muted playsinline class="no-mirror"></video>
+          <div class="tile-footer">
+            <mat-icon class="tile-mic" [class.muted]="!isAudioEnabled()">
+              {{ isAudioEnabled() ? 'mic' : 'mic_off' }}
+            </mat-icon>
+            <span>You ({{ username }})</span>
+          </div>
+          <div class="cam-off-badge" *ngIf="!isVideoEnabled()">
+            <mat-icon>videocam_off</mat-icon>
+            <span>Camera off</span>
+          </div>
+        </div>
 
-      <button mat-icon-button (click)="toggleVideo()">
-        <mat-icon>{{ isVideoEnabled() ? 'videocam' : 'videocam_off' }}</mat-icon>
-      </button>
+        <!-- Remote tiles -->
+        <div class="video-tile" *ngFor="let remote of callService.remoteStreams()">
+          <video [srcObject]="remote.stream" autoplay playsinline></video>
+          <div class="tile-footer">
+            <mat-icon class="tile-mic">mic</mat-icon>
+            <span>{{ remote.participantId }}</span>
+          </div>
+        </div>
 
-      <div class="toolbar-select">
+      </div>
+    </div>
 
-        <select
-          [ngModel]="selectedAudioDevice()"
-          (ngModelChange)="selectedAudioDevice.set($event); changeMicInCall()">
-          <option *ngFor="let d of audioDevices()" [value]="d.deviceId">
-            {{ d.label || 'Mic' }}
-          </option>
-        </select>
+    <!-- ── Fixed control bar ── -->
+    <div class="control-bar">
+      <div class="control-group">
 
-        <select
-          [ngModel]="selectedVideoDevice()"
-          (ngModelChange)="selectedVideoDevice.set($event); changeCameraInCall()">
-          <option *ngFor="let d of videoDevices()" [value]="d.deviceId">
-            {{ d.label || 'Cam' }}
-          </option>
-        </select>
+        <div class="ctrl-wrap">
+          <button class="ctrl-btn" [class.ctrl-off]="!isAudioEnabled()"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  (click)="toggleAudio()">
+            <mat-icon>{{ isAudioEnabled() ? 'mic' : 'mic_off' }}</mat-icon>
+          </button>
+          <select class="ctrl-select"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  [ngModel]="selectedAudioDevice()"
+                  (ngModelChange)="selectedAudioDevice.set($event); changeMicInCall()">
+            <option *ngFor="let d of audioDevices()" [value]="d.deviceId">{{ d.label || 'Mic' }}</option>
+          </select>
+        </div>
 
-        <select
-          [ngModel]="selectedSpeakerDevice()"
-          (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
-          <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">
-            {{ d.label || 'Speaker' }}
-          </option>
-        </select>
+        <div class="ctrl-wrap">
+          <button class="ctrl-btn" [class.ctrl-off]="!isVideoEnabled()"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  (click)="toggleVideo()">
+            <mat-icon>{{ isVideoEnabled() ? 'videocam' : 'videocam_off' }}</mat-icon>
+          </button>
+          <select class="ctrl-select"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  [ngModel]="selectedVideoDevice()"
+                  (ngModelChange)="selectedVideoDevice.set($event); changeCameraInCall()">
+            <option *ngFor="let d of videoDevices()" [value]="d.deviceId">{{ d.label || 'Cam' }}</option>
+          </select>
+        </div>
+
+        <div class="ctrl-wrap">
+          <button class="ctrl-btn"
+                  [disabled]="callService.connectionState() === 'reconnecting'">
+            <mat-icon>volume_up</mat-icon>
+          </button>
+          <select class="ctrl-select"
+                  [disabled]="callService.connectionState() === 'reconnecting'"
+                  [ngModel]="selectedSpeakerDevice()"
+                  (ngModelChange)="selectedSpeakerDevice.set($event); changeSpeaker()">
+            <option *ngFor="let d of speakerDevices()" [value]="d.deviceId">{{ d.label || 'Speaker' }}</option>
+          </select>
+        </div>
 
       </div>
 
-      <button mat-icon-button color="warn" (click)="leaveCall()">
+      <button class="leave-btn"
+              [disabled]="callService.connectionState() === 'reconnecting'"
+              (click)="leaveCall()">
         <mat-icon>call_end</mat-icon>
+        Leave
       </button>
-
     </div>
+
   </div>
 </ng-container>
